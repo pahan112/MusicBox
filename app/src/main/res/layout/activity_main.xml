@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="com.example.project.musicbox.activity.MainActivity">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/main" />
+
+    <LinearLayout
+        android:id="@+id/cv_now_pl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_layout"
+        android:layout_marginStart="@dimen/margin_layout"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.CardView
+
+            style="@style/Custom.Widget.CardView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/layout_height"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/now_playing"
+                    android:textColor="@color/colorNowPlaying"
+                    android:textSize="@dimen/text_title_size" />
+
+                <TextView
+                    android:id="@+id/tv_playing_now"
+                    android:textColor="@color/colorTextPlayingNow"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    tools:text="TextView"
+                    android:textSize="@dimen/text_title_size"
+                    android:layout_alignBaseline="@+id/tv_artist"
+                    android:layout_alignBottom="@+id/tv_artist"
+                    android:layout_toEndOf="@+id/tv_artist" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_item_music"
+            style="@style/Custom.Widget.CardView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/layout_height"
+            android:background="@android:color/white">
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/sv_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_next_pl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_height"
+        android:layout_below="@+id/cv_now_pl"
+        android:layout_marginEnd="@dimen/margin_layout"
+        android:layout_marginStart="@dimen/margin_layout">
+
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="start"
+            android:layout_marginStart="5dp"
+            android:text="@string/next"
+            android:textColor="@color/colorNextPlaying"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/tv_next"
+            tools:text="TextView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/colorNextPlaying"
+            android:textSize="@dimen/text_size" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/rl_next_pl"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:background="@color/colorLine"
+        android:orientation="vertical" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_item_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_line"
+        android:layout_marginEnd="@dimen/margin_layout"
+        android:layout_marginStart="@dimen/margin_layout">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+
+</RelativeLayout>

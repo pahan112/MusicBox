@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MusicBox</string>
+    <string name="artist">Artist:</string>
+    <string name="track">Track:</string>
+    <string name="now_playing">Now Playing:</string>
+    <string name="next">Next:</string>
+</resources>

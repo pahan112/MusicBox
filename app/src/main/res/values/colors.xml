@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="colorText">#c4b6ae</color>
+    <color name="colorNowPlaying">#23486d</color>
+    <color name="colorNextPlaying">#3a93d8</color>
+    <color name="colorLine">#233767</color>
+    <color name="colorTextPlayingNow">#567797</color>
+
+
+
+
+    <item name="blue" type="color">#6d8d40</item>
+    <item name="purple" type="color">#46573b</item>
+    <item name="green" type="color">#7f2018</item>
+    <item name="orange" type="color">#9d7745</item>
+    <item name="red" type="color">#ed9501</item>
+    <item name="darkblue" type="color">#efa074</item>
+    <item name="darkpurple" type="color">#fdce1b</item>
+    <item name="darkgreen" type="color">#d0523b</item>
+    <item name="darkorange" type="color">#e36156</item>
+
+
+    <integer-array name="androidcolors">
+        <item>@color/blue</item>
+        <item>@color/purple</item>
+        <item>@color/green</item>
+        <item>@color/orange</item>
+        <item>@color/red</item>
+        <item>@color/darkblue</item>
+        <item>@color/darkpurple</item>
+        <item>@color/darkgreen</item>
+        <item>@color/darkorange</item>
+
+    </integer-array>
+</resources>
