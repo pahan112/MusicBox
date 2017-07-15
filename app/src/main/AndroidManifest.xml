@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.AdminActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
         <service android:name=".service.MusicService"/>
     </application>
 
