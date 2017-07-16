@@ -3,4 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/bt_add_track"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add" />
 </LinearLayout>

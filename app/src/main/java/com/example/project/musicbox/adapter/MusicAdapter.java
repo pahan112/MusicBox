@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.project.musicbox.R;
-import com.example.project.musicbox.model.PlayList;
+import com.example.project.musicbox.model.MusicInfo;
 
 import java.util.List;
 import java.util.Random;
@@ -24,11 +24,11 @@ import butterknife.ButterKnife;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
 
-    private List<PlayList> mPlayLists;
+    private List<MusicInfo> mMusicInfos;
     private OnClickMusicItem mOnClickMusicItem;
 
-    public MusicAdapter(List<PlayList> mPlayLists, OnClickMusicItem mOnClickMusicItem) {
-        this.mPlayLists = mPlayLists;
+    public MusicAdapter(List<MusicInfo> mMusicInfos, OnClickMusicItem mOnClickMusicItem) {
+        this.mMusicInfos = mMusicInfos;
         this.mOnClickMusicItem = mOnClickMusicItem;
     }
 
@@ -39,16 +39,16 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public void onBindViewHolder(MusicAdapter.MusicViewHolder holder, int position) {
-        holder.bind(mPlayLists.get(position));
+        holder.bind(mMusicInfos.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mPlayLists.size();
+        return mMusicInfos.size();
     }
 
-    public void setPlayList(List<PlayList> mPlayLists) {
-        this.mPlayLists = mPlayLists;
+    public void setPlayList(List<MusicInfo> mMusicInfos) {
+        this.mMusicInfos = mMusicInfos;
         notifyDataSetChanged();
     }
 
@@ -69,14 +69,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             androidColors = itemView.getResources().getIntArray(R.array.androidcolors);
         }
 
-        public void bind(final PlayList playList) {
-            mTextViewArtist.setText(playList.getArtist());
-            mTextViewTrack.setText(playList.getTrack());
+        public void bind(final MusicInfo musicInfo) {
+            mTextViewArtist.setText(musicInfo.getArtist());
+            mTextViewTrack.setText(musicInfo.getTrack());
 
             linearLayoutItemMusic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnClickMusicItem.obClickMusic(playList);
+                    mOnClickMusicItem.obClickMusic(musicInfo);
                 }
             });
 
@@ -86,6 +86,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     }
 
     public interface OnClickMusicItem {
-        void obClickMusic(PlayList playList);
+        void obClickMusic(MusicInfo musicInfo);
     }
 }

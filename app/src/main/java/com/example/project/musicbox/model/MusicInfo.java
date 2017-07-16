@@ -11,12 +11,12 @@ import java.io.Serializable;
  * Created by Pahan on 06.07.2017.
  */
 @Table(database = PlaylistDataBase.class)
-public class PlayList extends BaseModel implements Serializable{
+public class MusicInfo extends BaseModel implements Serializable{
     @Column
     @PrimaryKey(autoincrement = true)
     public long idd;
     @Column
-    private String namePlayList;
+    private String id;
     @Column
     private String data;
     @Column
@@ -48,14 +48,11 @@ public class PlayList extends BaseModel implements Serializable{
         this.track = track;
     }
 
-    public String getNamePlayList() {
-        return namePlayList;
+    public String getId() {
+        return id;
     }
 
-    public void setNamePlayList(String namePlayList) {
-        this.namePlayList = namePlayList;
+    public void setId(String id) {
+        this.id = id;
     }
-
-
-
 }
