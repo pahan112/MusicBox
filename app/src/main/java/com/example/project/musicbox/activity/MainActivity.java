@@ -15,8 +15,12 @@ import android.widget.TextView;
 
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.MusicAdapter;
+import com.example.project.musicbox.model.MusicIdModel;
+import com.example.project.musicbox.model.MusicIdModel_Table;
 import com.example.project.musicbox.model.MusicInfo;
+import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.service.MusicService;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     private MusicAdapter mMusicAdapter;
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
+    private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
     private List<MusicInfo> mPlayListsSearch = new ArrayList<>();
     private boolean bound = false;
 
@@ -46,9 +51,16 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mMusicIdModel.clear();
+        mMusicIdModel = new Select().from(MusicIdModel.class).queryList();
 
         mMusicInfos.clear();
-        mMusicInfos = new Select().from(MusicInfo.class).queryList();
+        for (int i = 0; i < mMusicIdModel.size(); i++) {
+
+            mMusicInfos.addAll(SQLite.select().from(MusicInfo.class)
+                    .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
+        }
+
 
         startService(new Intent(this, MusicService.class));
 

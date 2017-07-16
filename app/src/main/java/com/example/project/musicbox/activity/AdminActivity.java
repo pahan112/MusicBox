@@ -1,8 +1,10 @@
 package com.example.project.musicbox.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,21 +12,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.widget.Button;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.project.musicbox.R;
+import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 
 
 import com.example.project.musicbox.model.PlayListModel;
+import com.example.project.musicbox.model.PlayListModel_Table;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
@@ -44,6 +53,19 @@ public class AdminActivity extends AppCompatActivity {
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<String> mTracks = new ArrayList<>();
     private List<String> mTracksId = new ArrayList<>();
+    private List<String> mPlayListName = new ArrayList<>();
+    private String radio = "day";
+    private String[] playArrayName = {"day", "morning", "evening"};
+
+
+    @BindView(R.id.radioButton)
+    RadioButton mRadioButtonDay;
+    @BindView(R.id.radioButton2)
+    RadioButton mRadioButtonMorning;
+    @BindView(R.id.radioButton3)
+    RadioButton mRadioButtonEving;
+    @BindView(R.id.radio_group)
+    RadioGroup mRadioGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,31 +93,104 @@ public class AdminActivity extends AppCompatActivity {
             mTracksId.add(mMusicInfos.get(i).getId());
             mTracks.add(mMusicInfos.get(i).getArtist() + " - " + mMusicInfos.get(i).getTrack());
         }
+        mRadioButtonDay.setChecked(true);
 
+
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.radioButton:
+                        radio = "day";
+                        break;
+                    case R.id.radioButton2:
+                        radio = "morning";
+                        break;
+                    case R.id.radioButton3:
+                        radio = "evening";
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
-    @OnClick(R.id.bt_add_track)
+    @OnClick(R.id.bt_add_track_day)
     void onClickAddTrack() {
-
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle("123");
+        adb.setTitle("Day");
         adb.setMultiChoiceItems(mTracksId.toArray(new String[mTracksId.size()]), null, myItemsMultiClickListener);
         adb.setMultiChoiceItems(mTracks.toArray(new String[mTracks.size()]), null, myItemsMultiClickListener);
         adb.setPositiveButton("okey", myBtnClickListener);
         adb.create();
         adb.show();
-        Log.d(LOG_TAG, "fsdfsd");
     }
 
-    // обработчик нажатия на кнопку
+    @OnClick(R.id.bt_start_box)
+    void onClickStart() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Set Play List");
+        adb.setSingleChoiceItems(playArrayName, -1, myClickListener);
+        adb.setPositiveButton("okey", myClickListener);
+        adb.create();
+        adb.show();
+    }
+
+    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+            ListView lv = ((AlertDialog) dialog).getListView();
+            if (which == Dialog.BUTTON_POSITIVE) {
+                Log.d(LOG_TAG, "pos = " + lv.getCheckedItemPosition());
+                if (lv.getCheckedItemPosition() == 0) {
+                    mPlayListName.clear();
+                    Delete.table(MusicIdModel.class);
+                    List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("day")).queryList();
+                    for (int i = 0; i < lm.size(); i++) {
+                        MusicIdModel musicIdModel = new MusicIdModel();
+                        musicIdModel.setIdMusic(lm.get(i).getIdTrack());
+                        musicIdModel.save();
+                    }
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                } else if (lv.getCheckedItemPosition() == 1) {
+                    mPlayListName.clear();
+                    Delete.table(MusicIdModel.class);
+                    List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("morning")).queryList();
+                    for (int i = 0; i < lm.size(); i++) {
+                        MusicIdModel musicIdModel = new MusicIdModel();
+                        musicIdModel.setIdMusic(lm.get(i).getIdTrack());
+                        musicIdModel.save();
+                    }
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                } else if (lv.getCheckedItemPosition() == 2) {
+                    mPlayListName.clear();
+                    Delete.table(MusicIdModel.class);
+                    List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("evening")).queryList();
+                    for (int i = 0; i < lm.size(); i++) {
+                        MusicIdModel musicIdModel = new MusicIdModel();
+                        musicIdModel.setIdMusic(lm.get(i).getIdTrack());
+                        musicIdModel.save();
+                    }
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                }
+            } else
+                // выводим в лог позицию нажатого элемента
+                Log.d(LOG_TAG, "which = " + which);
+        }
+    };
+
+
     DialogInterface.OnClickListener myBtnClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
             SparseBooleanArray sbArray = ((AlertDialog) dialog).getListView().getCheckedItemPositions();
             for (int i = 0; i < sbArray.size(); i++) {
                 int key = sbArray.keyAt(i);
                 if (sbArray.get(key)) {
-                    PlayListModel playListModel = new PlayListModel();
-                    playListModel.setNameList("den");
+                    final PlayListModel playListModel = new PlayListModel();
+                    playListModel.setNameList(radio);
                     playListModel.setIdTrack(mTracksId.get(key));
                     playListModel.save();
                 }
