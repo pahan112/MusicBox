@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.model.MusicInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,21 +19,21 @@ import butterknife.ButterKnife;
  * Created by Pahan on 17.07.2017.
  */
 
-public class FragmentAdminAdapter extends RecyclerView.Adapter<FragmentAdminAdapter.FragmentAdminViewHolder> {
+public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.FragmentAdminViewHolder> {
 
     private List<MusicInfo> mMusicInfos;
 
-    public FragmentAdminAdapter(List<MusicInfo> mMusicInfos) {
+    public FragmentAdapter(List<MusicInfo> mMusicInfos) {
         this.mMusicInfos = mMusicInfos;
     }
 
     @Override
-    public FragmentAdminAdapter.FragmentAdminViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FragmentAdapter.FragmentAdminViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new FragmentAdminViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(FragmentAdminAdapter.FragmentAdminViewHolder holder, int position) {
+    public void onBindViewHolder(FragmentAdapter.FragmentAdminViewHolder holder, int position) {
         holder.bind(mMusicInfos.get(position));
     }
 

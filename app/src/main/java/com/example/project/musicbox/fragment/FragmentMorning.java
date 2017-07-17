@@ -3,7 +3,6 @@ package com.example.project.musicbox.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.project.musicbox.R;
-import com.example.project.musicbox.adapter.FragmentAdminAdapter;
+import com.example.project.musicbox.adapter.FragmentAdapter;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
@@ -38,7 +37,7 @@ public class FragmentMorning extends Fragment {
 
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
-    private FragmentAdminAdapter mFragmentAdminAdapter;
+    private FragmentAdapter mFragmentAdapter;
 
     @Nullable
     @Override
@@ -63,9 +62,9 @@ public class FragmentMorning extends Fragment {
             mMusicInfos.addAll(SQLite.select().from(MusicInfo.class)
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
-        mFragmentAdminAdapter = new FragmentAdminAdapter(mMusicInfos);
+        mFragmentAdapter = new FragmentAdapter(mMusicInfos);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mFragmentAdminAdapter);
+        recyclerView.setAdapter(mFragmentAdapter);
 
         return view;
     }
