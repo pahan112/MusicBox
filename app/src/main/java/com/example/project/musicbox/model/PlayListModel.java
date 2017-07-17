@@ -5,13 +5,14 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Pahan on 16.07.2017.
  */
 @Table(database = PlaylistDataBase.class)
-public class PlayListModel extends BaseModel{
+public class PlayListModel extends BaseModel implements Serializable{
     @Column
     @PrimaryKey(autoincrement = true)
     public long idd;
@@ -34,5 +35,9 @@ public class PlayListModel extends BaseModel{
 
     public void setIdTrack(String idTrack) {
         this.idTrack = idTrack;
+    }
+
+    public long getIdd() {
+        return idd;
     }
 }

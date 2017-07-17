@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Pahan on 17.07.2017.
  */
 
-public class FragmentEvening extends Fragment {
+public class FragmentEvening extends Fragment implements FragmentAdapter.OnClickDelete{
     @BindView(R.id.rv_evening)
     RecyclerView recyclerView;
 
@@ -61,10 +62,16 @@ public class FragmentEvening extends Fragment {
             mMusicInfos.addAll(SQLite.select().from(MusicInfo.class)
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
-        mFragmentAdapter = new FragmentAdapter(mMusicInfos);
+        mFragmentAdapter = new FragmentAdapter(mMusicInfos,this,lm);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mFragmentAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onClickDelete(PlayListModel playListModel) {
+        SQLite.delete().from(PlayListModel.class)
+                .where(PlayListModel_Table.idd.eq(playListModel.getIdd())).execute();
     }
 }

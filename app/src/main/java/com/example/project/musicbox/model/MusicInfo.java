@@ -55,4 +55,9 @@ public class MusicInfo extends BaseModel implements Serializable{
     public void setId(String id) {
         this.id = id;
     }
+
+    public long getIdd() {
+        return idd;
+    }
+
 }

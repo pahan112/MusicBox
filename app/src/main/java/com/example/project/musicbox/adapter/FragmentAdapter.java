@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.model.MusicInfo;
+import com.example.project.musicbox.model.PlayListModel;
 
 import java.util.List;
 
@@ -22,9 +23,13 @@ import butterknife.ButterKnife;
 public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.FragmentAdminViewHolder> {
 
     private List<MusicInfo> mMusicInfos;
+    private List<PlayListModel> mPlayListModels;
+    private OnClickDelete mOnClickDelete;
 
-    public FragmentAdapter(List<MusicInfo> mMusicInfos) {
+    public FragmentAdapter(List<MusicInfo> mMusicInfos , OnClickDelete mOnClickDelete, List<PlayListModel> mPlayListModels) {
         this.mMusicInfos = mMusicInfos;
+        this.mOnClickDelete = mOnClickDelete;
+        this.mPlayListModels =mPlayListModels;
     }
 
     @Override
@@ -34,7 +39,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Fragme
 
     @Override
     public void onBindViewHolder(FragmentAdapter.FragmentAdminViewHolder holder, int position) {
-        holder.bind(mMusicInfos.get(position));
+        holder.bind(mMusicInfos.get(position),mPlayListModels.get(position));
     }
 
     @Override
@@ -53,8 +58,17 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Fragme
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-        public void bind (MusicInfo musicInfo){
+        public void bind (final MusicInfo musicInfo, final PlayListModel playListModel){
             textViewAdmin.setText(musicInfo.getArtist() + " - " + musicInfo.getTrack());
+            buttonAdminDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnClickDelete.onClickDelete(playListModel);
+                }
+            });
         }
+    }
+    public interface OnClickDelete{
+        void onClickDelete(PlayListModel playListModel);
     }
 }
