@@ -3,6 +3,7 @@ package com.example.project.musicbox.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,9 +35,12 @@ import butterknife.ButterKnife;
 public class FragmentEvening extends Fragment implements FragmentAdapter.OnClickDelete{
     @BindView(R.id.rv_evening)
     RecyclerView recyclerView;
+    @BindView(R.id.srl_evening)
+    SwipeRefreshLayout mAdminSwipeRefreshLayout;
 
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
+    private List<PlayListModel> lm = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
 
     @Nullable
@@ -45,8 +49,19 @@ public class FragmentEvening extends Fragment implements FragmentAdapter.OnClick
         View view = inflater.inflate(R.layout.fragment_evening, null);
         ButterKnife.bind(this, view);
 
+        initSwipeRefreshLayout();
+        addMusic();
+
+        mFragmentAdapter = new FragmentAdapter(mMusicInfos,this,lm);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mFragmentAdapter);
+
+        return view;
+    }
+
+    private void addMusic(){
         Delete.table(MusicIdModel.class);
-        List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("evening")).queryList();
+        lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("evening")).queryList();
         for (int i = 0; i < lm.size(); i++) {
             MusicIdModel musicIdModel = new MusicIdModel();
             musicIdModel.setIdMusic(lm.get(i).getIdTrack());
@@ -62,11 +77,17 @@ public class FragmentEvening extends Fragment implements FragmentAdapter.OnClick
             mMusicInfos.addAll(SQLite.select().from(MusicInfo.class)
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
-        mFragmentAdapter = new FragmentAdapter(mMusicInfos,this,lm);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mFragmentAdapter);
+    }
 
-        return view;
+    private void initSwipeRefreshLayout() {
+        mAdminSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                addMusic();
+                mFragmentAdapter.setPlayList(mMusicInfos,lm);
+                mAdminSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override

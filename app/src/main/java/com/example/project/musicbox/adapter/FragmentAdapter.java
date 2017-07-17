@@ -47,6 +47,11 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Fragme
         return mMusicInfos.size();
     }
 
+    public void setPlayList(List<MusicInfo> mMusicInfos , List<PlayListModel> mPlayListModels) {
+        this.mMusicInfos = mMusicInfos;
+        this.mPlayListModels =mPlayListModels;
+        notifyDataSetChanged();
+    }
     public class FragmentAdminViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_admin)
