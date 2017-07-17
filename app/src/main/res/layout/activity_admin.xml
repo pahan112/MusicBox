@@ -1,38 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/bt_add_track_day"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add PlayList Day" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="99dp"
+        android:text="add to PlayList" />
+
     <Button
         android:id="@+id/bt_start_box"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:text="start box" />
-<RadioGroup
-    android:layout_width="wrap_content"
-    android:id="@+id/radio_group"
-    android:layout_height="wrap_content">
-    <RadioButton
-        android:id="@+id/radioButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Day" />
 
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="match_parent"
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Morning" />
+        android:orientation="horizontal">
 
-    <RadioButton
-        android:id="@+id/radioButton3"
+        <RadioButton
+            android:id="@+id/rb_morning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Morning" />
+
+        <RadioButton
+            android:id="@+id/rb_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Day" />
+
+        <RadioButton
+            android:id="@+id/rb_evening"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evening" />
+
+        <RadioButton
+            android:id="@+id/rb_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Admin" />
+    </RadioGroup>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Evening" />
-</RadioGroup>
-</LinearLayout>
+        android:layout_below="@+id/bt_add_track_day"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout" />
+
+
+</RelativeLayout>

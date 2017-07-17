@@ -4,4 +4,11 @@
     <string name="track">Track:</string>
     <string name="now_playing">Now Playing:</string>
     <string name="next">Next:</string>
+
+    <string-array name="titles_tab">
+        <item>Morning</item>
+        <item>Day</item>
+        <item>Evening</item>
+        <item>Admin</item>
+    </string-array>
 </resources>

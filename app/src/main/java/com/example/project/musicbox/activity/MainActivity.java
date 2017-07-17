@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.MusicAdapter;
 import com.example.project.musicbox.model.MusicIdModel;
-import com.example.project.musicbox.model.MusicIdModel_Table;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.service.MusicService;
@@ -45,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     SearchView mSearchViewMusic;
     @BindView(R.id.tv_playing_now)
     TextView mTextViewPlayingNow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
