@@ -24,6 +24,12 @@
 
         </activity>
         <service android:name=".service.MusicService"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="613392b2a6499e739d757f52372d1e6afd96fd1f" />
+
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

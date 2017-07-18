@@ -20,10 +20,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.MyFragmentPagerAdapter;
 import com.example.project.musicbox.model.MusicIdModel;
@@ -37,6 +42,8 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
+
+import io.fabric.sdk.android.Fabric;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +63,11 @@ public class AdminActivity extends AppCompatActivity {
     private List<String> mTracks = new ArrayList<>();
     private List<String> mTracksId = new ArrayList<>();
     private String radio = "day";
-    private String[] playArrayName = {"day", "morning", "evening","admin"};
+    private String[] playArrayName = {"day", "morning", "evening", "admin"};
 
 
-
-    @BindView(R.id.rb_day)
-    RadioButton mRadioButtonDay;
-    @BindView(R.id.radio_group)
-    RadioGroup mRadioGroup;
+    @BindView(R.id.spinner)
+    Spinner mSpinner;
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
     @BindView(R.id.tab_layout)
@@ -72,6 +76,7 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
 
@@ -95,28 +100,37 @@ public class AdminActivity extends AppCompatActivity {
             mTracksId.add(mMusicInfos.get(i).getId());
             mTracks.add(mMusicInfos.get(i).getArtist() + " - " + mMusicInfos.get(i).getTrack());
         }
-        mRadioButtonDay.setChecked(true);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, playArrayName);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        mSpinner.setAdapter(adapter);
+        mSpinner.setPrompt("PlayList");
+        mSpinner.setSelection(1);
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_day:
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                switch (position) {
+                    case 0:
                         radio = "day";
                         break;
-                    case R.id.rb_morning:
+                    case 1:
                         radio = "morning";
                         break;
-                    case R.id.rb_evening:
+                    case 2:
                         radio = "evening";
                         break;
-                    case R.id.rb_admin:
+                    case 3:
                         radio = "admin";
                         break;
                     default:
                         break;
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
 
@@ -168,7 +182,7 @@ public class AdminActivity extends AppCompatActivity {
                         musicIdModel.setIdMusic(lm.get(i).getIdTrack());
                         musicIdModel.save();
                     }
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 } else if (lv.getCheckedItemPosition() == 2) {
                     Delete.table(MusicIdModel.class);
@@ -178,9 +192,9 @@ public class AdminActivity extends AppCompatActivity {
                         musicIdModel.setIdMusic(lm.get(i).getIdTrack());
                         musicIdModel.save();
                     }
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-                }else if (lv.getCheckedItemPosition() == 3) {
+                } else if (lv.getCheckedItemPosition() == 3) {
                     Delete.table(MusicIdModel.class);
                     List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("admin")).queryList();
                     for (int i = 0; i < lm.size(); i++) {
@@ -188,7 +202,7 @@ public class AdminActivity extends AppCompatActivity {
                         musicIdModel.setIdMusic(lm.get(i).getIdTrack());
                         musicIdModel.save();
                     }
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }
             } else

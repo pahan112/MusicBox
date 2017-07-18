@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.FragmentAdapter;
@@ -42,6 +43,7 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
     private List<PlayListModel> lm = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
+
 
     @Nullable
     @Override

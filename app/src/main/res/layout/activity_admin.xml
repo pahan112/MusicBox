@@ -22,36 +22,13 @@
         android:layout_alignParentTop="true"
         android:text="start box" />
 
-    <RadioGroup
-        android:id="@+id/radio_group"
+
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+    </Spinner>
 
-        <RadioButton
-            android:id="@+id/rb_morning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Morning" />
-
-        <RadioButton
-            android:id="@+id/rb_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Day" />
-
-        <RadioButton
-            android:id="@+id/rb_evening"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Evening" />
-
-        <RadioButton
-            android:id="@+id/rb_admin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Admin" />
-    </RadioGroup>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"

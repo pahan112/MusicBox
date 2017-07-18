@@ -1,4 +1,22 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 android {
     compileSdkVersion 25
@@ -50,5 +68,9 @@ dependencies {
         annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
         compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
         compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+    }
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
     }
 }
