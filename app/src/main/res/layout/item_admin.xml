@@ -17,5 +17,4 @@
         android:id="@+id/bt_admin_delete"
         android:text="delete"
         android:layout_alignParentRight="true"/>
-
 </RelativeLayout>
