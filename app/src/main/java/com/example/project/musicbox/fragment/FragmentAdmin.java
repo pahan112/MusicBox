@@ -43,6 +43,7 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
     private List<PlayListModel> lm = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
+    private String strtext;
 
 
     @Nullable
@@ -51,8 +52,8 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
         View view = inflater.inflate(R.layout.fragment_admin, null);
         ButterKnife.bind(this, view);
 
+        strtext = getArguments().getString("edttext");
         initSwipeRefreshLayout();
-
         addMusic();
 
 
@@ -65,7 +66,7 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
 
     private void addMusic() {
         Delete.table(MusicIdModel.class);
-        lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("admin")).queryList();
+        lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is(strtext)).queryList();
         for (int i = 0; i < lm.size(); i++) {
             MusicIdModel musicIdModel = new MusicIdModel();
             musicIdModel.setIdMusic(lm.get(i).getIdTrack());
@@ -88,7 +89,7 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
             @Override
             public void onRefresh() {
                 addMusic();
-                mFragmentAdapter.setPlayList(mMusicInfos,lm);
+                mFragmentAdapter.setPlayList(mMusicInfos, lm);
                 mAdminSwipeRefreshLayout.setRefreshing(false);
             }
         });

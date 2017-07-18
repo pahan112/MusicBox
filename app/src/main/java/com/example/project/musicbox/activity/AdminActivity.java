@@ -12,29 +12,34 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.project.musicbox.R;
-import com.example.project.musicbox.adapter.MyFragmentPagerAdapter;
+import com.example.project.musicbox.adapter.FragmentAdapter;
+import com.example.project.musicbox.adapter.MusicAdapter;
+import com.example.project.musicbox.fragment.FragmentAdmin;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 
 
+import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.PlayListModel;
 import com.example.project.musicbox.model.PlayListModel_Table;
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -56,7 +61,7 @@ import butterknife.OnClick;
  * Created by Pahan on 15.07.2017.
  */
 
-public class AdminActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity implements FragmentAdapter.OnClickDelete{
 
     public static final String LOG_TAG = "myLog";
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
@@ -68,10 +73,7 @@ public class AdminActivity extends AppCompatActivity {
 
     @BindView(R.id.spinner)
     Spinner mSpinner;
-    @BindView(R.id.view_pager)
-    ViewPager mViewPager;
-    @BindView(R.id.tab_layout)
-    TabLayout tab;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class AdminActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
+
 
         FlowManager.init(new FlowConfig.Builder(this).build());
 
@@ -92,6 +95,7 @@ public class AdminActivity extends AppCompatActivity {
         } else {
             addTrack();
         }
+
         mMusicInfos.clear();
         mTracks.clear();
         mTracksId.clear();
@@ -107,6 +111,7 @@ public class AdminActivity extends AppCompatActivity {
         mSpinner.setPrompt("PlayList");
         mSpinner.setSelection(1);
 
+
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -114,15 +119,19 @@ public class AdminActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         radio = "day";
+                        setAdapter(radio);
                         break;
                     case 1:
                         radio = "morning";
+                        setAdapter(radio);
                         break;
                     case 2:
                         radio = "evening";
+                        setAdapter(radio);
                         break;
                     case 3:
                         radio = "admin";
+                        setAdapter(radio);
                         break;
                     default:
                         break;
@@ -134,9 +143,19 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-        mViewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.titles_tab)));
-        tab.setupWithViewPager(mViewPager);
+
     }
+
+    private void setAdapter(String s){
+        Bundle bundle = new Bundle();
+        bundle.putString("edttext", s);
+        FragmentAdmin fragobj = new FragmentAdmin();
+        fragobj.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frgmCont,fragobj);
+        fragmentTransaction.commit();
+    }
+
 
     @OnClick(R.id.bt_add_track_day)
     void onClickAddTrack() {
@@ -285,5 +304,10 @@ public class AdminActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    @Override
+    public void onClickDelete(PlayListModel playListModel) {
+
     }
 }
