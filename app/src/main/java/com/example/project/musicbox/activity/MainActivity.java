@@ -61,11 +61,14 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
 
+        Log.e(LOG_TAG,getResources().getDisplayMetrics().density + "");
+
+        int c = 10/(int)getResources().getDisplayMetrics().density;
 
         startService(new Intent(this, MusicService.class));
 
         mMusicAdapter = new MusicAdapter(mMusicInfos,this);
-        mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this,5));
+        mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this,c));
         mRecyclerViewMusic.setAdapter(mMusicAdapter);
 
 

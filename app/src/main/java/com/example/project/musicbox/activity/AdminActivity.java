@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
@@ -244,6 +245,8 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
         Cursor cur = cr.query(uri, null, selection, null, sortOrder);
         int count = 0;
 
+        Log.d(LOG_TAG, "start");
+
         Delete.tables(MusicInfo.class);
         if (cur != null) {
             count = cur.getCount();
@@ -280,7 +283,7 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     addTrack();
                 } else {
-                    Log.e(LOG_TAG, "Denied");
+                    addTrack();
                 }
                 return;
             }
