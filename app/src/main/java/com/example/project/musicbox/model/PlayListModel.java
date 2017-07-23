@@ -14,8 +14,8 @@ import java.util.List;
 @Table(database = PlaylistDataBase.class)
 public class PlayListModel extends BaseModel implements Serializable{
     @Column
-    @PrimaryKey(autoincrement = true)
-    public long idd;
+    @PrimaryKey
+    private String idd;
     @Column
     private String nameList;
     @Column
@@ -37,7 +37,11 @@ public class PlayListModel extends BaseModel implements Serializable{
         this.idTrack = idTrack;
     }
 
-    public long getIdd() {
+    public String getIdd() {
         return idd;
+    }
+
+    public void setIdd(String idd) {
+        this.idd = idd;
     }
 }

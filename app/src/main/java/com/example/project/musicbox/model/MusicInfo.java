@@ -24,6 +24,7 @@ public class MusicInfo extends BaseModel implements Serializable{
     @Column
     private String artist;
 
+
     public String getData() {
         return data;
     }

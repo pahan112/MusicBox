@@ -23,4 +23,8 @@ public class MusicIdModel extends BaseModel {
     public void setIdMusic(String idMusic) {
         this.idMusic = idMusic;
     }
+
+    public long getIdd() {
+        return idd;
+    }
 }

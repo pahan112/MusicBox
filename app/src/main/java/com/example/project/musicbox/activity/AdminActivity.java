@@ -29,8 +29,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.project.musicbox.R;
@@ -65,14 +69,15 @@ import butterknife.OnClick;
  * Created by Pahan on 15.07.2017.
  */
 
-public class AdminActivity extends AppCompatActivity implements FragmentAdapter.OnClickDelete{
+public class AdminActivity extends AppCompatActivity  {
 
     public static final String LOG_TAG = "myLog";
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<String> mTracks = new ArrayList<>();
     private List<String> mTracksId = new ArrayList<>();
-    private String radio ="";
-    private String[] playArrayName = {"play at time of day","day", "morning", "evening", "admin"};
+    private String radio = "";
+    private String[] playArrayName = {"choose playlist", "day", "morning", "evening", "admin"};
+
 
     int seconds = new Time(System.currentTimeMillis()).getHours();
 
@@ -81,6 +86,8 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
     Spinner mSpinner;
     @BindView(R.id.bt_add_track_day)
     Button mButtonAdd;
+    @BindView(R.id.text_selected_spiner)
+    TextView mTextSelectedSpinner;
 
 
     @Override
@@ -125,41 +132,48 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
                                        int position, long id) {
                 switch (position) {
                     case 0:
-                        Log.d(LOG_TAG,seconds+ "");
-                        if (seconds >= 9 && seconds <12 ){
-                            Log.d(LOG_TAG,"1");
+                        mTextSelectedSpinner.setText("");
+                        Log.d(LOG_TAG, seconds + "");
+                        if (seconds >= 9 && seconds < 12) {
+                            Log.d(LOG_TAG, "1");
                             radio = "morning";
-                        }if (seconds >= 12 && seconds <19){
-                            Log.d(LOG_TAG,"2");
+                        }
+                        if (seconds >= 12 && seconds < 19) {
+                            Log.d(LOG_TAG, "2");
                             radio = "day";
-                        }if (seconds >=19 && seconds <25 ||seconds >=0 && seconds <9){
-                            Log.d(LOG_TAG,"3");
+                        }
+                        if (seconds >= 19 && seconds < 25 || seconds >= 0 && seconds < 9) {
+                            Log.d(LOG_TAG, "3");
                             radio = "evening";
                         }
                         setAdapter("");
-                        Log.d(LOG_TAG,radio);
+                        Log.d(LOG_TAG, radio);
                         mButtonAdd.setClickable(false);
                         mButtonAdd.setEnabled(false);
                         break;
                     case 1:
+                        mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
                         radio = "day";
                         setAdapter(radio);
                         break;
                     case 2:
+                        mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
                         radio = "morning";
                         setAdapter(radio);
                         break;
                     case 3:
+                        mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
                         radio = "evening";
                         setAdapter(radio);
                         break;
                     case 4:
+                        mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
                         radio = "admin";
@@ -178,7 +192,7 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
 
     }
 
-    private void setAdapter(String s){
+    private void setAdapter(String s) {
         Bundle bundle = new Bundle();
         bundle.putString("edttext", s);
         FragmentAdmin fragobj = new FragmentAdmin();
@@ -191,14 +205,23 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
 
     @OnClick(R.id.bt_add_track_day)
     void onClickAddTrack() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle("Day");
-        adb.setMultiChoiceItems(mTracksId.toArray(new String[mTracksId.size()]), null, myItemsMultiClickListener);
-        adb.setMultiChoiceItems(mTracks.toArray(new String[mTracks.size()]), null, myItemsMultiClickListener);
-        adb.setPositiveButton("okey", myBtnClickListener);
-        adb.create();
-        adb.show();
+
+//        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+//        adb.setTitle(radio);
+//
+//        adb.setMultiChoiceItems(mTracksId.toArray(new String[mTracksId.size()]), null, myItemsMultiClickListener);
+//        adb.setMultiChoiceItems(mTracks.toArray(new String[mTracks.size()]), null, myItemsMultiClickListener);
+//
+//        adb.setPositiveButton("okey", myBtnClickListener);
+//        adb.create();
+//        adb.show();
+
+        Intent intent = new Intent(getApplicationContext(), TreckActivity.class);
+        intent.putExtra("qwewrwqr", radio);
+        startActivity(intent);
     }
+
+
 
     @OnClick(R.id.bt_start_box)
     void onClickStart() {
@@ -213,28 +236,27 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
         startActivity(intent);
     }
 
-    DialogInterface.OnClickListener myBtnClickListener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-
-            SparseBooleanArray sbArray = ((AlertDialog) dialog).getListView().getCheckedItemPositions();
-            for (int i = 0; i < sbArray.size(); i++) {
-                int key = sbArray.keyAt(i);
-                if (sbArray.get(key)) {
-                    final PlayListModel playListModel = new PlayListModel();
-                    playListModel.setNameList(radio);
-                    playListModel.setIdTrack(mTracksId.get(key));
-                    playListModel.save();
-
-                }
-            }
-        }
-    };
-    DialogInterface.OnMultiChoiceClickListener myItemsMultiClickListener = new DialogInterface.OnMultiChoiceClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-            Log.d(LOG_TAG, "which = " + which + ", isChecked = " + isChecked);
-        }
-    };
+//    DialogInterface.OnClickListener myBtnClickListener = new DialogInterface.OnClickListener() {
+//        public void onClick(DialogInterface dialog, int which) {
+//            SparseBooleanArray sbArray = ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+//            for (int i = 0; i < sbArray.size(); i++) {
+//                int key = sbArray.keyAt(i);
+//                if (sbArray.get(key)) {
+//                    final PlayListModel playListModel = new PlayListModel();
+//                    playListModel.setNameList(radio);
+//                    playListModel.setIdTrack(mTracksId.get(key));
+//                    playListModel.save();
+//
+//                }
+//            }
+//        }
+//    };
+//    DialogInterface.OnMultiChoiceClickListener myItemsMultiClickListener = new DialogInterface.OnMultiChoiceClickListener() {
+//        @Override
+//        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+//            Log.d(LOG_TAG, "which = " + which + ", isChecked = " + isChecked);
+//        }
+//    };
 
     private void addTrack() {
         ContentResolver cr = getApplicationContext().getContentResolver();
@@ -257,6 +279,7 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
                     String nameTrack = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String id = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media._ID));
+
 
 //                    long durationInMs = Long.parseLong(cur.getString(cur.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
 //
@@ -288,10 +311,5 @@ public class AdminActivity extends AppCompatActivity implements FragmentAdapter.
                 return;
             }
         }
-    }
-
-    @Override
-    public void onClickDelete(PlayListModel playListModel) {
-
     }
 }

@@ -5,34 +5,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp">
-
+<RelativeLayout
+    android:id="@+id/rv_admin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/text_selected_spiner"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:layout_height="wrap_content" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_toEndOf="@+id/text_selected_spiner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="11dp"/>
     <Button
         android:id="@+id/bt_add_track_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:text="add to PlayList"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="99dp"
-        android:text="add to PlayList" />
+        android:layout_toStartOf="@+id/bt_start_box" />
 
     <Button
         android:id="@+id/bt_start_box"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
         android:text="start box" />
+</RelativeLayout>
 
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </Spinner>
 
     <FrameLayout
-        android:layout_below="@+id/bt_add_track_day"
+        android:layout_below="@+id/rv_admin"
         android:id="@+id/frgmCont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

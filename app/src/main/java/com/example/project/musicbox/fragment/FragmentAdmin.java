@@ -1,5 +1,6 @@
 package com.example.project.musicbox.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,15 +37,14 @@ import butterknife.ButterKnife;
 public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDelete {
     @BindView(R.id.rv_admin)
     RecyclerView recyclerView;
-    @BindView(R.id.srl_admin)
-    SwipeRefreshLayout mAdminSwipeRefreshLayout;
+
 
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
     private List<PlayListModel> lm = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
     private String strtext;
-
+    public static final String LOG_TAG = "myLog";
 
     @Nullable
     @Override
@@ -53,7 +53,7 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
         ButterKnife.bind(this, view);
 
         strtext = getArguments().getString("edttext");
-        initSwipeRefreshLayout();
+
         addMusic();
 
 
@@ -84,21 +84,18 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
         }
     }
 
-    private void initSwipeRefreshLayout() {
-        mAdminSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                addMusic();
-                mFragmentAdapter.setPlayList(mMusicInfos, lm);
-                mAdminSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
     @Override
     public void onClickDelete(PlayListModel playListModel) {
         SQLite.delete().from(PlayListModel.class)
                 .where(PlayListModel_Table.idd.eq(playListModel.getIdd())).execute();
+        addMusic();
+        mFragmentAdapter.setPlayList(mMusicInfos, lm);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        addMusic();
+        mFragmentAdapter.setPlayList(mMusicInfos, lm);
     }
 }

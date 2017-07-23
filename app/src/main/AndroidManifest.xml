@@ -24,7 +24,7 @@
 
         </activity>
         <service android:name=".service.MusicService"/>
-
+        <activity android:name=".activity.TreckActivity"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="613392b2a6499e739d757f52372d1e6afd96fd1f" />
