@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         int c = 10/(int)getResources().getDisplayMetrics().density;
 
-        startService(new Intent(this, MusicService.class));
 
         mMusicAdapter = new MusicAdapter(mMusicInfos,this);
         mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this,c));
@@ -73,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
 
         initSearch();
+
+
+        if (!mMusicInfos.isEmpty()) {
+            startService(new Intent(this, MusicService.class));
+            getApplicationContext().bindService(new Intent(this, MusicService.class), mServerConn, Context.BIND_AUTO_CREATE);
+        }
     }
 
 
@@ -120,23 +125,26 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (bound) {
+//        if (bound) {
+        if (!mMusicInfos.isEmpty()) {
             getApplicationContext().unbindService(mServerConn);
+//        }
+            stopService(new Intent(this, MusicService.class));
         }
-        stopService(new Intent(this, MusicService.class));
     }
 
     @Override
     public void obClickMusic(MusicInfo musicInfo) {
-        mTextViewPlayingNow.setText(musicInfo.getArtist() + " - " + musicInfo.getTrack());
-        if (bound) {
-            getApplicationContext().unbindService(mServerConn);
-        }
-        stopService(new Intent(this, MusicService.class));
 
-        Intent intent = new Intent(this, MusicService.class);
-        intent.putExtra("key", musicInfo.getData());
-        getApplicationContext().bindService( intent, mServerConn, Context.BIND_AUTO_CREATE);
+//        mTextViewPlayingNow.setText(musicInfo.getArtist() + " - " + musicInfo.getTrack());
+//        if (bound) {
+//            getApplicationContext().unbindService(mServerConn);
+//        }
+//        stopService(new Intent(this, MusicService.class));
+
+//        Intent intent = new Intent(this, MusicService.class);
+//        intent.putExtra("key", musicInfo.getData());
+//        getApplicationContext().bindService( intent, mServerConn, Context.BIND_AUTO_CREATE);
 
     }
 }
