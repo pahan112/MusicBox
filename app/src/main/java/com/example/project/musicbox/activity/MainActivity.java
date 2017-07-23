@@ -18,6 +18,7 @@ import com.example.project.musicbox.adapter.MusicAdapter;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
+import com.example.project.musicbox.model.MusicPlayNow;
 import com.example.project.musicbox.service.MusicService;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -135,7 +136,11 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     @Override
     public void obClickMusic(MusicInfo musicInfo) {
-
+        MusicPlayNow musicPlayNow = new MusicPlayNow();
+        musicPlayNow.setArtist(musicInfo.getArtist());
+        musicPlayNow.setData(musicInfo.getData());
+        musicPlayNow.setTrack(musicInfo.getTrack());
+        musicPlayNow.save();
 //        mTextViewPlayingNow.setText(musicInfo.getArtist() + " - " + musicInfo.getTrack());
 //        if (bound) {
 //            getApplicationContext().unbindService(mServerConn);

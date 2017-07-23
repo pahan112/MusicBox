@@ -13,6 +13,8 @@ import android.util.Log;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
+import com.example.project.musicbox.model.MusicPlayNow;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
@@ -31,7 +33,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private MediaPlayer mMp;
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
+    private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
     int c = 0;
+    int d = 0;
 
 
 
@@ -79,9 +83,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         try {
             mMp.reset();
-
+            if(!mMusicPlayNow.isEmpty()&& isPlay){
+                mMp.setDataSource(this, Uri.parse(mMusicPlayNow.get(d).getData()));
+                Log.d(LOG_TAG,mMusicPlayNow.get(d).getTrack() + " 123");
+                d++;
+            }else {
                 mMp.setDataSource(this, Uri.parse(mMusicInfos.get(c).getData()));
-
+                Log.d(LOG_TAG,mMusicInfos.get(c).getTrack() + " 567");
+            }
             mMp.prepare();
             mMp.start();
         } catch (IllegalArgumentException e) {
@@ -111,17 +120,29 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Log.d(LOG_TAG, "onDestroy");
 //        if (isPlay) {
 //            isPlay = false;
-            mMp.pause();
+        mMp.pause();
 //        }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        c++;
-        if(c == mMusicInfos.size()){
-            c =0;
+        mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
+
+        isPlay = true;
+        if(d == mMusicPlayNow.size()){
+            isPlay = false;
+            Log.e(LOG_TAG, "gotovo");
+            d = 0;
+            Delete.table(MusicPlayNow.class);
         }
-        Log.e(LOG_TAG,c + "");
+        if(mMusicPlayNow.isEmpty()|| !isPlay) {
+            c++;
+        }
+        if (c == mMusicInfos.size()) {
+            c = 0;
+        }
+        Log.e(LOG_TAG, c + "c");
+        Log.e(LOG_TAG, d + "d");
         play();
     }
 }
