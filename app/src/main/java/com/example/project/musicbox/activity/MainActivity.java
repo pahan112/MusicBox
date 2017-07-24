@@ -1,8 +1,10 @@
 package com.example.project.musicbox.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MusicAdapter.OnClickMusicItem{
+public class MainActivity extends AppCompatActivity implements MusicAdapter.OnClickMusicItem {
 
     public static final String LOG_TAG = "myLog";
 
@@ -39,13 +41,26 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private List<MusicInfo> mPlayListsSearch = new ArrayList<>();
     private boolean bound = false;
 
+    private BroadcastReceiver br;
+    public final static String BROADCAST_ACTION = "com.example.project.musicbox.reciver";
+    public final static int STATUS_START = 100;
+    public final static int STATUS_FINISH = 200;
+
     @BindView(R.id.rv_item_music)
     RecyclerView mRecyclerViewMusic;
     @BindView(R.id.sv_music)
     SearchView mSearchViewMusic;
     @BindView(R.id.tv_playing_now)
     TextView mTextViewPlayingNow;
+    @BindView(R.id.tv_next_play_main)
+    TextView mTextViewNextPlayMain;
 
+    private int d = 0;
+    private int l = -1;
+    private int k = 1;
+    private int x = 1;
+
+    private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,26 +77,71 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
 
-        Log.e(LOG_TAG,getResources().getDisplayMetrics().density + "");
+        Log.e(LOG_TAG, getResources().getDisplayMetrics().density + "");
 
-        int c = 10/(int)getResources().getDisplayMetrics().density;
+        final int[] c = {10 / (int) getResources().getDisplayMetrics().density};
 
 
-        mMusicAdapter = new MusicAdapter(mMusicInfos,this);
-        mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this,c));
+        mMusicAdapter = new MusicAdapter(mMusicInfos, this);
+        mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this, c[0]));
         mRecyclerViewMusic.setAdapter(mMusicAdapter);
 
 
         initSearch();
 
+        mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
 
         if (!mMusicInfos.isEmpty()) {
             startService(new Intent(this, MusicService.class));
             getApplicationContext().bindService(new Intent(this, MusicService.class), mServerConn, Context.BIND_AUTO_CREATE);
         }
+
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                l = intent.getIntExtra("start", 0);
+                d = intent.getIntExtra("finsh", 0);
+                mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
+
+                if (d > 0) {
+                    mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
+                }
+                if (l >= 0 && !mMusicPlayNow.isEmpty()) {
+
+                    mTextViewPlayingNow.setText(mMusicPlayNow.get(l).getArtist() + " - " + mMusicPlayNow.get(l).getTrack());
+                    mTextViewNextPlayMain.setText("");
+                    for (k = l+1; k < mMusicPlayNow.size(); k++) {
+                        Log.d(LOG_TAG, k + "k");
+                        mTextViewNextPlayMain.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
+                    }
+//                    if (l < mMusicPlayNow.size()) {
+//                        StringBuilder sb = new StringBuilder();
+//                        sb.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
+//                        mTextViewNextPlayMain.setText(sb);
+//                        k++;
+//                        Log.d(LOG_TAG, "zashlo");
+//                    }else {
+//                        mTextViewNextPlayMain.setText("");
+//                        k=0;
+//                        Log.d(LOG_TAG, "neshalo");
+//                    }
+                }
+                Log.e(LOG_TAG, l + " l " + d + " d");
+            }
+        };
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(br, intFilt);
     }
 
 
+    private void nextPlay() {
+        mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
+        mTextViewNextPlayMain.setText("");
+        for ( x=l+1; x < mMusicPlayNow.size(); x++) {
+            mTextViewNextPlayMain.append(mMusicPlayNow.get(x).getArtist() + " - " + mMusicPlayNow.get(x).getTrack() + ", ");
+        }
+    }
 
     private void initSearch() {
         mSearchViewMusic.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -132,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 //        }
             stopService(new Intent(this, MusicService.class));
         }
+        unregisterReceiver(br);
     }
 
     @Override
@@ -141,15 +202,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         musicPlayNow.setData(musicInfo.getData());
         musicPlayNow.setTrack(musicInfo.getTrack());
         musicPlayNow.save();
-//        mTextViewPlayingNow.setText(musicInfo.getArtist() + " - " + musicInfo.getTrack());
-//        if (bound) {
-//            getApplicationContext().unbindService(mServerConn);
-//        }
-//        stopService(new Intent(this, MusicService.class));
 
-//        Intent intent = new Intent(this, MusicService.class);
-//        intent.putExtra("key", musicInfo.getData());
-//        getApplicationContext().bindService( intent, mServerConn, Context.BIND_AUTO_CREATE);
-
+        nextPlay();
     }
 }

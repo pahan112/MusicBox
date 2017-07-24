@@ -5,11 +5,13 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.io.Serializable;
+
 /**
  * Created by Pahan on 23.07.2017.
  */
 @Table(database = PlaylistDataBase.class)
-public class MusicPlayNow extends BaseModel {
+public class MusicPlayNow extends BaseModel implements Serializable {
     @Column
     @PrimaryKey(autoincrement = true)
     public long idd;

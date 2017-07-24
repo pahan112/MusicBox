@@ -101,6 +101,7 @@
             android:textSize="@dimen/text_size" />
 
         <TextView
+            android:id="@+id/tv_next_play_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

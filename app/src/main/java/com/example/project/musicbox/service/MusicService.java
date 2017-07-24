@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.project.musicbox.activity.MainActivity;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
@@ -21,6 +22,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Pahan on 06.07.2017.
@@ -37,6 +40,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     int c = 0;
     int d = 0;
 
+//    private ExecutorService es;
 
 
     @Override
@@ -79,17 +83,20 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
     private void play() {
-
-
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
         try {
             mMp.reset();
             if(!mMusicPlayNow.isEmpty()&& isPlay){
                 mMp.setDataSource(this, Uri.parse(mMusicPlayNow.get(d).getData()));
                 Log.d(LOG_TAG,mMusicPlayNow.get(d).getTrack() + " 123");
+                intent.putExtra("start",d);
+                sendBroadcast(intent);
                 d++;
             }else {
                 mMp.setDataSource(this, Uri.parse(mMusicInfos.get(c).getData()));
                 Log.d(LOG_TAG,mMusicInfos.get(c).getTrack() + " 567");
+                intent.putExtra("finsh",c);
+                sendBroadcast(intent);
             }
             mMp.prepare();
             mMp.start();
@@ -118,6 +125,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void onDestroy() {
         super.onDestroy();
         Log.d(LOG_TAG, "onDestroy");
+        Delete.table(MusicPlayNow.class);
 //        if (isPlay) {
 //            isPlay = false;
         mMp.pause();
