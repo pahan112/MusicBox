@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         initSearch();
 
-        mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
 
         if (!mMusicInfos.isEmpty()) {
+            mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
             startService(new Intent(this, MusicService.class));
             getApplicationContext().bindService(new Intent(this, MusicService.class), mServerConn, Context.BIND_AUTO_CREATE);
         }
@@ -204,5 +204,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         musicPlayNow.save();
 
         nextPlay();
+
     }
 }

@@ -9,7 +9,7 @@
     app:cardElevation="4dp"
     android:layout_margin="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/ll_item_music"
         android:layout_height="match_parent"
@@ -26,16 +26,21 @@
             android:paddingStart="@dimen/text_padding"
             android:paddingTop="@dimen/text_padding"
             android:text="@string/artist"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tv_artist_name"
             android:textColor="@color/colorText"
             android:textSize="@dimen/text_title_size" />
 
+
         <TextView
             android:id="@+id/tv_artist"
+            android:layout_below="@+id/tv_artist_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:maxLines="2"
+            android:layout_centerHorizontal="true"
             android:ellipsize="end"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size"
@@ -46,9 +51,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingEnd="@dimen/text_padding"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/tv_artist"
             android:paddingStart="@dimen/text_padding"
             android:paddingTop="@dimen/text_padding"
             android:text="@string/track"
+            android:id="@+id/tv_track_name"
             android:textColor="@color/colorText"
             android:textSize="@dimen/text_title_size" />
 
@@ -58,11 +66,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:maxLines="2"
+            android:layout_below="@+id/tv_track_name"
             android:ellipsize="end"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size"
             tools:text="TextView" />
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="32sp"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
