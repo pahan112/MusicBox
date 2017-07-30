@@ -86,6 +86,8 @@ public class AdminActivity extends AppCompatActivity  {
     Spinner mSpinner;
     @BindView(R.id.bt_add_track_day)
     Button mButtonAdd;
+    @BindView(R.id.bt_start_box)
+    Button mButtonStart;
     @BindView(R.id.text_selected_spiner)
     TextView mTextSelectedSpinner;
 
@@ -105,7 +107,7 @@ public class AdminActivity extends AppCompatActivity  {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
             } else {
-
+                Log.e(LOG_TAG,"dfsdfsdfsdfsdfsdfsdfsdf");
             }
         } else {
             addTrack();
@@ -150,11 +152,15 @@ public class AdminActivity extends AppCompatActivity  {
                         Log.d(LOG_TAG, radio);
                         mButtonAdd.setClickable(false);
                         mButtonAdd.setEnabled(false);
+                        mButtonStart.setClickable(true);
+                        mButtonStart.setEnabled(true);
                         break;
                     case 1:
                         mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
+                        mButtonStart.setClickable(true);
+                        mButtonStart.setEnabled(true);
                         radio = "day";
                         setAdapter(radio);
                         break;
@@ -162,12 +168,16 @@ public class AdminActivity extends AppCompatActivity  {
                         mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
+                        mButtonStart.setClickable(true);
+                        mButtonStart.setEnabled(true);
                         radio = "morning";
                         setAdapter(radio);
                         break;
                     case 3:
                         mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
+                        mButtonStart.setClickable(true);
+                        mButtonStart.setEnabled(true);
                         mButtonAdd.setEnabled(true);
                         radio = "evening";
                         setAdapter(radio);
@@ -176,6 +186,8 @@ public class AdminActivity extends AppCompatActivity  {
                         mTextSelectedSpinner.setText("выбрано: ");
                         mButtonAdd.setClickable(true);
                         mButtonAdd.setEnabled(true);
+                        mButtonStart.setClickable(false);
+                        mButtonStart.setEnabled(false);
                         radio = "admin";
                         setAdapter(radio);
                         break;
@@ -205,16 +217,6 @@ public class AdminActivity extends AppCompatActivity  {
 
     @OnClick(R.id.bt_add_track_day)
     void onClickAddTrack() {
-
-//        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-//        adb.setTitle(radio);
-//
-//        adb.setMultiChoiceItems(mTracksId.toArray(new String[mTracksId.size()]), null, myItemsMultiClickListener);
-//        adb.setMultiChoiceItems(mTracks.toArray(new String[mTracks.size()]), null, myItemsMultiClickListener);
-//
-//        adb.setPositiveButton("okey", myBtnClickListener);
-//        adb.create();
-//        adb.show();
 
         Intent intent = new Intent(getApplicationContext(), TreckActivity.class);
         intent.putExtra("qwewrwqr", radio);
@@ -304,9 +306,11 @@ public class AdminActivity extends AppCompatActivity  {
         switch (requestCode) {
             case 2909: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    addTrack();
+                    Log.e(LOG_TAG,"startdfdff");
+//                    addTrack();
                 } else {
                     addTrack();
+                    Log.e(LOG_TAG,"srotfgpf");
                 }
                 return;
             }

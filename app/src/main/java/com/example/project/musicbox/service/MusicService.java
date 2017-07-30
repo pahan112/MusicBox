@@ -15,6 +15,8 @@ import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.MusicPlayNow;
+import com.example.project.musicbox.model.PlayListModel;
+import com.example.project.musicbox.model.PlayListModel_Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -39,7 +41,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
     int c = 0;
     int d = 0;
+    private List<MusicInfo> mMusicInfosAdmin = new ArrayList<>();
 
+    private Intent intent;
 //    private ExecutorService es;
 
 
@@ -57,6 +61,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             mMusicInfos.addAll(SQLite.select().from(MusicInfo.class)
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
+
 
     }
 
@@ -83,7 +88,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
     private void play() {
-        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+
         try {
             mMp.reset();
             if(!mMusicPlayNow.isEmpty()&& isPlay){
@@ -135,9 +140,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCompletion(MediaPlayer mp) {
         mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
-
+        intent = new Intent(MainActivity.BROADCAST_ACTION);
         isPlay = true;
-        if(d == mMusicPlayNow.size()){
+        if(d == mMusicPlayNow.size()&&!mMusicPlayNow.isEmpty()){
             isPlay = false;
             Log.e(LOG_TAG, "gotovo");
             d = 0;
@@ -148,9 +153,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
         if (c == mMusicInfos.size()) {
             c = 0;
+            intent.putExtra("finsh",c);
+            sendBroadcast(intent);
         }
-        Log.e(LOG_TAG, c + "c");
-        Log.e(LOG_TAG, d + "d");
+        Log.e(LOG_TAG, c + "c service");
+        Log.e(LOG_TAG, d + "d service");
         play();
     }
 }

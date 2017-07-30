@@ -21,7 +21,10 @@ import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.MusicPlayNow;
+import com.example.project.musicbox.model.PlayListModel;
+import com.example.project.musicbox.model.PlayListModel_Table;
 import com.example.project.musicbox.service.MusicService;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     public final static int STATUS_START = 100;
     public final static int STATUS_FINISH = 200;
 
+    private List<MusicInfo> mMusicInfosAdmin = new ArrayList<>();
+
     @BindView(R.id.rv_item_music)
     RecyclerView mRecyclerViewMusic;
     @BindView(R.id.sv_music)
@@ -58,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private int d = 0;
     private int l = -1;
     private int k = 1;
-    private int x = 1;
+    private int m = 0;
+    private int x = 0;
 
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
 
@@ -77,12 +83,18 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
 
-        Log.e(LOG_TAG, getResources().getDisplayMetrics().density + "");
+        List<PlayListModel> lm = SQLite.select().from(PlayListModel.class).where(PlayListModel_Table.nameList.is("admin")).queryList();
+        mMusicInfosAdmin.clear();
+        for (int i = 0; i < lm.size(); i++) {
+
+            mMusicInfosAdmin.addAll(SQLite.select().from(MusicInfo.class)
+                    .where(MusicInfo_Table.id.is(lm.get(i).getIdTrack())).queryList());
+        }
 
         final int[] c = {10 / (int) getResources().getDisplayMetrics().density};
 
 
-        mMusicAdapter = new MusicAdapter(mMusicInfos, this);
+        mMusicAdapter = new MusicAdapter(mMusicInfosAdmin, this);
         mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this, c[0]));
         mRecyclerViewMusic.setAdapter(mMusicAdapter);
 
@@ -92,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         if (!mMusicInfos.isEmpty()) {
             mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
+            for (m = d+1; m < mMusicInfos.size(); m++) {
+                mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+            }
+
             startService(new Intent(this, MusicService.class));
             getApplicationContext().bindService(new Intent(this, MusicService.class), mServerConn, Context.BIND_AUTO_CREATE);
         }
@@ -104,8 +120,14 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 d = intent.getIntExtra("finsh", 0);
                 mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
 
-                if (d > 0) {
+                mTextViewNextPlayMain.setText("");
+
+                if (d >= 0&&mMusicPlayNow.isEmpty()) {
                     mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
+                    for (m = d+1; m < mMusicInfos.size(); m++) {
+                        mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+                    }
+                    l=-1;
                 }
                 if (l >= 0 && !mMusicPlayNow.isEmpty()) {
 
@@ -127,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 //                        Log.d(LOG_TAG, "neshalo");
 //                    }
                 }
-                Log.e(LOG_TAG, l + " l " + d + " d");
             }
         };
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
@@ -153,10 +174,10 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    mMusicAdapter.setPlayList(mMusicInfos);
+                    mMusicAdapter.setPlayList(mMusicInfosAdmin);
                 } else {
                     mPlayListsSearch.clear();
-                    for (MusicInfo musicInfo : mMusicInfos) {
+                    for (MusicInfo musicInfo : mMusicInfosAdmin) {
                         if (musicInfo.getArtist().toLowerCase().contains(newText.toLowerCase()) || musicInfo.getTrack().toLowerCase().contains(newText.toLowerCase())) {
                             mPlayListsSearch.add(musicInfo);
                         }
