@@ -238,27 +238,6 @@ public class AdminActivity extends AppCompatActivity  {
         startActivity(intent);
     }
 
-//    DialogInterface.OnClickListener myBtnClickListener = new DialogInterface.OnClickListener() {
-//        public void onClick(DialogInterface dialog, int which) {
-//            SparseBooleanArray sbArray = ((AlertDialog) dialog).getListView().getCheckedItemPositions();
-//            for (int i = 0; i < sbArray.size(); i++) {
-//                int key = sbArray.keyAt(i);
-//                if (sbArray.get(key)) {
-//                    final PlayListModel playListModel = new PlayListModel();
-//                    playListModel.setNameList(radio);
-//                    playListModel.setIdTrack(mTracksId.get(key));
-//                    playListModel.save();
-//
-//                }
-//            }
-//        }
-//    };
-//    DialogInterface.OnMultiChoiceClickListener myItemsMultiClickListener = new DialogInterface.OnMultiChoiceClickListener() {
-//        @Override
-//        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//            Log.d(LOG_TAG, "which = " + which + ", isChecked = " + isChecked);
-//        }
-//    };
 
     private void addTrack() {
         ContentResolver cr = getApplicationContext().getContentResolver();
@@ -281,11 +260,6 @@ public class AdminActivity extends AppCompatActivity  {
                     String nameTrack = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String id = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media._ID));
-
-
-//                    long durationInMs = Long.parseLong(cur.getString(cur.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
-//
-//                    double durationInMin = ((double) durationInMs / 1000.0) / 60.0;
 
                     MusicInfo musicInfo = new MusicInfo();
                     musicInfo.setId(id);

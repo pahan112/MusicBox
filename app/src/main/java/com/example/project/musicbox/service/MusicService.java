@@ -41,10 +41,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
     int c = 0;
     int d = 0;
-    private List<MusicInfo> mMusicInfosAdmin = new ArrayList<>();
 
     private Intent intent;
-//    private ExecutorService es;
 
 
     @Override
@@ -68,21 +66,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-//        Log.d(LOG_TAG, intent.getStringExtra("key"));
 
         mMp = MediaPlayer.create(this, Uri.parse(mMusicInfos.get(c).getData()));
         mMp.setOnCompletionListener(this);
         mMp.start();
 
-//        isPlay = true;
-//        try {
-//            mMp.setDataSource(this, Uri.parse(intent.getStringExtra("key")));
-//            mMp.prepare();
-//            mMp.start();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return new Binder();
     }
 
@@ -131,10 +119,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         super.onDestroy();
         Log.d(LOG_TAG, "onDestroy");
         Delete.table(MusicPlayNow.class);
-//        if (isPlay) {
-//            isPlay = false;
+
         mMp.pause();
-//        }
     }
 
     @Override

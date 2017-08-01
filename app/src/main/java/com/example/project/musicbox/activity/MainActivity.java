@@ -42,12 +42,9 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
     private List<MusicIdModel> mMusicIdModel = new ArrayList<>();
     private List<MusicInfo> mPlayListsSearch = new ArrayList<>();
-    private boolean bound = false;
 
     private BroadcastReceiver br;
     public final static String BROADCAST_ACTION = "com.example.project.musicbox.reciver";
-    public final static int STATUS_START = 100;
-    public final static int STATUS_FINISH = 200;
 
     private List<MusicInfo> mMusicInfosAdmin = new ArrayList<>();
 
@@ -137,17 +134,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                         Log.d(LOG_TAG, k + "k");
                         mTextViewNextPlayMain.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
                     }
-//                    if (l < mMusicPlayNow.size()) {
-//                        StringBuilder sb = new StringBuilder();
-//                        sb.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
-//                        mTextViewNextPlayMain.setText(sb);
-//                        k++;
-//                        Log.d(LOG_TAG, "zashlo");
-//                    }else {
-//                        mTextViewNextPlayMain.setText("");
-//                        k=0;
-//                        Log.d(LOG_TAG, "neshalo");
-//                    }
                 }
             }
         };
@@ -193,13 +179,11 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             Log.d(LOG_TAG, "onServiceConnected");
-            bound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(LOG_TAG, "onServiceDisconnected");
-            bound = false;
         }
     };
 
@@ -207,10 +191,8 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if (bound) {
         if (!mMusicInfos.isEmpty()) {
             getApplicationContext().unbindService(mServerConn);
-//        }
             stopService(new Intent(this, MusicService.class));
         }
         unregisterReceiver(br);
