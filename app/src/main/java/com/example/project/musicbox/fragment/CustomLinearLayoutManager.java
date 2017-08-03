@@ -32,7 +32,7 @@ public class CustomLinearLayoutManager extends GridLayoutManager {
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
         final LinearSmoothScroller linearSmoothScroller =
                 new LinearSmoothScroller(recyclerView.getContext()) {
-                    private static final float MILLISECONDS_PER_INCH = 400f;
+                    private static final float MILLISECONDS_PER_INCH = 2000f;
 
                     @Override
                     public PointF computeScrollVectorForPosition(int targetPosition) {

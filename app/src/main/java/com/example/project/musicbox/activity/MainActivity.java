@@ -19,6 +19,8 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -68,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     @BindView(R.id.tv_next_play_main)
     TextView mTextViewNextPlayMain;
 
+    @BindView(R.id.rl_main_screen)
+    RelativeLayout mRvTouch;
+
+//    private int msg1;
+//    private int msg2;
+//    private int msg3;
+
+    private Animation mEnlargeAnimation;
 
 
     private int d = 0;
@@ -75,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private int k = 1;
     private int m = 0;
     private int x = 0;
+    int i = -1;
+
 
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
 
@@ -179,6 +191,13 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
         registerReceiver(br, intFilt);
 
+
+//        Bundle extras = getIntent().getExtras();
+//        msg1 = extras.getInt("asdf");
+//        msg2 = extras.getInt("asdf1");
+//        msg3 = extras.getInt("asdf2");
+//        Log.d(LOG_TAG, msg1 + "day " +msg2+ " morning"+ msg3+ "evening");
+
         }
 
 
@@ -238,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         unregisterReceiver(br);
     }
 
+
     @Override
     public void obClickMusic(MusicInfo musicInfo) {
         MusicPlayNow musicPlayNow = new MusicPlayNow();
@@ -248,7 +268,18 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         nextPlay();
 
-        new CountDownTimer(5000, 1000) {
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+//
+//   mMusicAdapter.touchScreen(i);
+//        i++;
+
+        Animation mEnlargeAnimation = AnimationUtils.loadAnimation(mRecyclerViewMusic.getContext(), R.anim.scale_out_tv);
+        mRecyclerViewMusic.startAnimation(mEnlargeAnimation);
+        mEnlargeAnimation.setFillAfter(true);
+        new CountDownTimer(5000, 10) {
             @Override
             public void onTick(long millisUntilFinished) {
                 handler.postDelayed(runnable, mMusicAdapter.getItemCount());
@@ -260,23 +291,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 handler.postDelayed(runnable, speedScroll);
             }
         }.start();
-
+        return super.dispatchTouchEvent(ev);
     }
 
-    @OnClick(R.id.rl_main_screen)
-    void clickMain() {
-        Log.d(LOG_TAG, "onServiceDisconnecteddsadasdasd");
-        new CountDownTimer(5000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                handler.postDelayed(runnable, mMusicAdapter.getItemCount());
-                handler.removeCallbacks(runnable);
-            }
-
-            @Override
-            public void onFinish() {
-                handler.postDelayed(runnable, speedScroll);
-            }
-        }.start();
-    }
 }

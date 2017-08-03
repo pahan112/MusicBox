@@ -41,9 +41,42 @@
         android:text="start box" />
 </RelativeLayout>
 
+    <EditText
+        android:layout_below="@+id/rv_admin"
+        android:id="@+id/et_start"
+        android:layout_width="wrap_content"
+        android:inputType="time"
+        android:layout_height="wrap_content"
+        android:hint="start" />
+    <EditText
+        android:layout_below="@+id/rv_admin"
+        android:id="@+id/et_end"
+        android:layout_toEndOf="@+id/et_start"
+        android:inputType="time"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content"
+        android:hint="end  " />
+    <Button
+        android:layout_below="@+id/rv_admin"
+        android:id="@+id/bt_save"
+        android:layout_width="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:text="Save"/>
+    <Spinner
+        android:id="@+id/sp_set_time"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:padding="9dp"
+        android:layout_below="@+id/rv_admin"
+        android:layout_toEndOf="@+id/et_end"
+        />
 
     <FrameLayout
-        android:layout_below="@+id/rv_admin"
+        android:layout_below="@+id/bt_save"
         android:id="@+id/frgmCont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

@@ -47,7 +47,7 @@ public class TreckActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Bundle extras = getIntent().getExtras();
-        msg = extras.getString("qwewrwqr");;
+        msg = extras.getString("qwewrwqr");
 
         mMusicInfos = new Select().from(MusicInfo.class).queryList();
 

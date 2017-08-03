@@ -30,9 +30,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,8 +59,12 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import io.fabric.sdk.android.Fabric;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,7 +75,7 @@ import butterknife.OnClick;
  * Created by Pahan on 15.07.2017.
  */
 
-public class AdminActivity extends AppCompatActivity  {
+public class AdminActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = "myLog";
     private List<MusicInfo> mMusicInfos = new ArrayList<>();
@@ -77,6 +83,7 @@ public class AdminActivity extends AppCompatActivity  {
     private List<String> mTracksId = new ArrayList<>();
     private String radio = "";
     private String[] playArrayName = {"choose playlist", "day", "morning", "evening", "admin"};
+    private String[] playArrayName2 = {"day", "morning", "evening"};
 
 
     int seconds = new Time(System.currentTimeMillis()).getHours();
@@ -90,7 +97,18 @@ public class AdminActivity extends AppCompatActivity  {
     Button mButtonStart;
     @BindView(R.id.text_selected_spiner)
     TextView mTextSelectedSpinner;
+    @BindView(R.id.et_start)
+    EditText mEditTextStart;
+    @BindView(R.id.et_end)
+    EditText mEditTextEnd;
+    @BindView(R.id.sp_set_time)
+    Spinner mSetTimeSpiner;
 
+
+
+    int string;
+    int string2;
+    int string3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +125,7 @@ public class AdminActivity extends AppCompatActivity  {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
             } else {
-                Log.e(LOG_TAG,"dfsdfsdfsdfsdfsdfsdfsdf");
+                Log.e(LOG_TAG, "dfsdfsdfsdfsdfsdfsdfsdf");
             }
         } else {
             addTrack();
@@ -127,6 +145,12 @@ public class AdminActivity extends AppCompatActivity  {
         mSpinner.setAdapter(adapter);
         mSpinner.setPrompt("PlayList");
 
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, playArrayName2);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mSetTimeSpiner.setAdapter(adapter2);
+        mSetTimeSpiner.setPrompt("PlayList");
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -210,7 +234,7 @@ public class AdminActivity extends AppCompatActivity  {
         FragmentAdmin fragobj = new FragmentAdmin();
         fragobj.setArguments(bundle);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frgmCont,fragobj);
+        fragmentTransaction.replace(R.id.frgmCont, fragobj);
         fragmentTransaction.commit();
     }
 
@@ -224,7 +248,6 @@ public class AdminActivity extends AppCompatActivity  {
     }
 
 
-
     @OnClick(R.id.bt_start_box)
     void onClickStart() {
         Delete.table(MusicIdModel.class);
@@ -235,6 +258,9 @@ public class AdminActivity extends AppCompatActivity  {
             musicIdModel.save();
         }
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        intent.putExtra("asdf",string);
+//        intent.putExtra("asdf1",string2);
+//        intent.putExtra("asdf2",string3);
         startActivity(intent);
     }
 
@@ -280,14 +306,43 @@ public class AdminActivity extends AppCompatActivity  {
         switch (requestCode) {
             case 2909: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e(LOG_TAG,"startdfdff");
+                    Log.e(LOG_TAG, "startdfdff");
 //                    addTrack();
                 } else {
                     addTrack();
-                    Log.e(LOG_TAG,"srotfgpf");
+                    Log.e(LOG_TAG, "srotfgpf");
                 }
                 return;
             }
         }
+    }
+
+    @OnClick(R.id.bt_save)
+    void onClickSave() {
+
+        mSetTimeSpiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        string = Integer.valueOf(mEditTextStart.getText().toString());
+                        Log.d(LOG_TAG,string + "1");
+                        break;
+                    case 1:
+                        string2 = Integer.valueOf(mEditTextStart.getText().toString());
+                        Log.d(LOG_TAG,string2+ "2");
+                        break;
+                    case 2:
+                        string3 = Integer.valueOf(mEditTextStart.getText().toString());
+                        Log.d(LOG_TAG,string3 + "3");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }
