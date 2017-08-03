@@ -6,17 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.MusicAdapter;
+import com.example.project.musicbox.fragment.CustomLinearLayoutManager;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
@@ -30,9 +39,11 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements MusicAdapter.OnClickMusicItem {
 
@@ -57,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     @BindView(R.id.tv_next_play_main)
     TextView mTextViewNextPlayMain;
 
+
+
     private int d = 0;
     private int l = -1;
     private int k = 1;
@@ -64,6 +77,30 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private int x = 0;
 
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
+
+    final int speedScroll = 200;
+    final Handler handler = new Handler();
+    final Runnable runnable = new Runnable() {
+        int count = 0;
+        boolean flag = true;
+
+        @Override
+        public void run() {
+            if (count < mMusicAdapter.getItemCount()) {
+                if (count == mMusicAdapter.getItemCount() - 1) {
+                    flag = false;
+                } else if (count == 0) {
+                    flag = true;
+                }
+                if (flag) count++;
+                else count--;
+
+                mRecyclerViewMusic.smoothScrollToPosition(count);
+                handler.postDelayed(this, speedScroll);
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +129,10 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
 
         mMusicAdapter = new MusicAdapter(mMusicInfosAdmin, this);
-        mRecyclerViewMusic.setLayoutManager(new GridLayoutManager(this, c[0]));
+        mRecyclerViewMusic.setLayoutManager(new CustomLinearLayoutManager(this, c[0]));
         mRecyclerViewMusic.setAdapter(mMusicAdapter);
+
+        handler.postDelayed(runnable, speedScroll);
 
 
         initSearch();
@@ -101,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         if (!mMusicInfos.isEmpty()) {
             mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
-            for (m = d+1; m < mMusicInfos.size(); m++) {
+            for (m = d + 1; m < mMusicInfos.size(); m++) {
                 mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
             }
 
@@ -119,18 +158,18 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
                 mTextViewNextPlayMain.setText("");
 
-                if (d >= 0&&mMusicPlayNow.isEmpty()) {
+                if (d >= 0 && mMusicPlayNow.isEmpty()) {
                     mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
-                    for (m = d+1; m < mMusicInfos.size(); m++) {
+                    for (m = d + 1; m < mMusicInfos.size(); m++) {
                         mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
                     }
-                    l=-1;
+                    l = -1;
                 }
                 if (l >= 0 && !mMusicPlayNow.isEmpty()) {
 
                     mTextViewPlayingNow.setText(mMusicPlayNow.get(l).getArtist() + " - " + mMusicPlayNow.get(l).getTrack());
                     mTextViewNextPlayMain.setText("");
-                    for (k = l+1; k < mMusicPlayNow.size(); k++) {
+                    for (k = l + 1; k < mMusicPlayNow.size(); k++) {
                         Log.d(LOG_TAG, k + "k");
                         mTextViewNextPlayMain.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
                     }
@@ -139,13 +178,14 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         };
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
         registerReceiver(br, intFilt);
-    }
+
+        }
 
 
     private void nextPlay() {
         mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
         mTextViewNextPlayMain.setText("");
-        for ( x=l+1; x < mMusicPlayNow.size(); x++) {
+        for (x = l + 1; x < mMusicPlayNow.size(); x++) {
             mTextViewNextPlayMain.append(mMusicPlayNow.get(x).getArtist() + " - " + mMusicPlayNow.get(x).getTrack() + ", ");
         }
     }
@@ -208,5 +248,35 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         nextPlay();
 
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                handler.postDelayed(runnable, mMusicAdapter.getItemCount());
+                handler.removeCallbacks(runnable);
+            }
+
+            @Override
+            public void onFinish() {
+                handler.postDelayed(runnable, speedScroll);
+            }
+        }.start();
+
+    }
+
+    @OnClick(R.id.rl_main_screen)
+    void clickMain() {
+        Log.d(LOG_TAG, "onServiceDisconnecteddsadasdasd");
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                handler.postDelayed(runnable, mMusicAdapter.getItemCount());
+                handler.removeCallbacks(runnable);
+            }
+
+            @Override
+            public void onFinish() {
+                handler.postDelayed(runnable, speedScroll);
+            }
+        }.start();
     }
 }

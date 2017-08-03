@@ -6,10 +6,16 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.Transformation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,11 +78,21 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         CardView cardView;
         @BindView(R.id.ll_item_music)
         RelativeLayout linearLayoutItemMusic;
+        @BindView(R.id.image_delete_button)
+        ImageView mIageViewBtDelete;
+        @BindView(R.id.image_add_button)
+        ImageView mIageViewBtAdd;
+
+        private boolean isClick = false;
+
+        private Animation mEnlargeAnimation;
 
         public MusicViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             androidColors = itemView.getResources().getIntArray(R.array.androidcolors);
+
+
         }
 
         public void bind(final MusicInfo musicInfo) {
@@ -86,34 +102,67 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             linearLayoutItemMusic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnClickMusicItem.obClickMusic(musicInfo);
 
-//                    linearLayoutItemMusic.setClickable(false);
-//                    linearLayoutItemMusic.setEnabled(false);
+                    if(!isClick) {
+                        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
+                        itemView.startAnimation(mEnlargeAnimation);
+                        mEnlargeAnimation.setFillAfter(true);
 
-
-                    new CountDownTimer(30000, 1000) {
-
+                        mIageViewBtAdd.setVisibility(View.VISIBLE);
+                        mIageViewBtDelete.setVisibility(View.VISIBLE);
+                        isClick =true;
+                    }else {
+                        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
+                        itemView.startAnimation(mEnlargeAnimation);
+                        mEnlargeAnimation.setFillAfter(true);
+                        mIageViewBtAdd.setVisibility(View.INVISIBLE);
+                        mIageViewBtDelete.setVisibility(View.INVISIBLE);
+                        isClick = false;
+                    }
+                    mIageViewBtDelete.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onTick(long millisUntilFinished) {
-                            linearLayoutItemMusic.setClickable(false);
-                            linearLayoutItemMusic.setEnabled(false);
-                            mTextViewTimer.setText(millisUntilFinished / 1000 + "");
-                            cardView.setCardBackgroundColor(Color.GRAY);
+                        public void onClick(View v) {
+                            mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
+                            itemView.startAnimation(mEnlargeAnimation);
+                            mEnlargeAnimation.setFillAfter(true);
+                            mIageViewBtAdd.setVisibility(View.INVISIBLE);
+                            mIageViewBtDelete.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+                    mIageViewBtAdd.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
+                            itemView.startAnimation(mEnlargeAnimation);
+                            mEnlargeAnimation.setFillAfter(true);
+                            mOnClickMusicItem.obClickMusic(musicInfo);
+                            new CountDownTimer(30000, 1000) {
+
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    linearLayoutItemMusic.setClickable(false);
+                                    linearLayoutItemMusic.setEnabled(false);
+                                    mTextViewTimer.setText(millisUntilFinished / 1000 + "");
+                                    cardView.setCardBackgroundColor(Color.GRAY);
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    linearLayoutItemMusic.setClickable(true);
+                                    linearLayoutItemMusic.setEnabled(true);
+                                    mTextViewTimer.setText("");
+
+                                    int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
+                                    cardView.setCardBackgroundColor(randomAndroidColor);
+                                }
+
+                            }.start();
+                            mIageViewBtAdd.setVisibility(View.INVISIBLE);
+                            mIageViewBtDelete.setVisibility(View.INVISIBLE);
                         }
 
-                        @Override
-                        public void onFinish() {
-                            linearLayoutItemMusic.setClickable(true);
-                            linearLayoutItemMusic.setEnabled(true);
-                            mTextViewTimer.setText("");
-
-                            int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
-                            cardView.setCardBackgroundColor(randomAndroidColor);
-                        }
-
-                    }.start();
-
+                    });
 
                 }
             });
@@ -126,4 +175,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     public interface OnClickMusicItem {
         void obClickMusic(MusicInfo musicInfo);
     }
+
+
 }
