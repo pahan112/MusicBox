@@ -4,7 +4,14 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!--kiosk mode permission-->
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!--kiosk mode permission end-->
+
     <application
+        android:name=".kioskmode.AppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+          >
         </activity>
         <activity android:name=".activity.AdminActivity"
             android:screenOrientation="landscape">
@@ -29,6 +37,20 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="613392b2a6499e739d757f52372d1e6afd96fd1f" />
+
+        <!--kiosk mode -->
+        <!--<receiver android:name=".kioskmode.BootReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
+        <receiver android:name=".kioskmode.OnScreenOffReceiver" />
+
+        <service
+            android:name=".kioskmode.KioskService"
+            android:exported="false" />
+        <!--kiosk mode end-->
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

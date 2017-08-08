@@ -10,6 +10,8 @@
     <color name="colorNextPlaying">#3a93d8</color>
     <color name="colorLine">#233767</color>
     <color name="colorTextPlayingNow">#567797</color>
+    <color name="colorPlayingnext">#424b7f</color>
+    <color name="colorTextPlayingnext">#4077b6</color>
 
 
 

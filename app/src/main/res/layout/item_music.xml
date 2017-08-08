@@ -112,7 +112,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="190dp"
             android:layout_alignParentEnd="true"
             android:adjustViewBounds="false"
             android:background="@drawable/effect"
@@ -134,7 +134,7 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="5dp"
             android:visibility="invisible"
-            app:srcCompat="@drawable/fdadasdasd" />
+            app:srcCompat="@drawable/track_added" />
 
         <TextView
             android:id="@+id/textView"
@@ -142,6 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+
             android:text="added"
             android:layout_below="@+id/iv_add_bt_ch"
             android:textColor="@android:color/black"

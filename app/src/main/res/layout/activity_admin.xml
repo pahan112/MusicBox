@@ -64,6 +64,15 @@
         android:layout_alignParentEnd="true"
         android:layout_height="wrap_content"
         android:text="Save"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/tv_spiner_track"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@+id/sp_set_time"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rv_admin"/>
     <Spinner
         android:id="@+id/sp_set_time"
 

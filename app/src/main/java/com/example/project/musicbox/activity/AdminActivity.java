@@ -43,6 +43,7 @@ import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.FragmentAdapter;
 import com.example.project.musicbox.adapter.MusicAdapter;
 import com.example.project.musicbox.fragment.FragmentAdmin;
+import com.example.project.musicbox.model.ModelSpinerTrack;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 
@@ -103,12 +104,17 @@ public class AdminActivity extends AppCompatActivity {
     EditText mEditTextEnd;
     @BindView(R.id.sp_set_time)
     Spinner mSetTimeSpiner;
-
+    @BindView(R.id.tv_spiner_track)
+    TextView mTextSpinerTrack;
+    @BindView(R.id.bt_save)
+    Button mButtonSave;
 
 
     int string;
     int string2;
     int string3;
+
+    private ModelSpinerTrack modelSpinerTrack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -224,8 +230,8 @@ public class AdminActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
-
+        modelSpinerTrack = new ModelSpinerTrack();
+        spinnerTrack();
     }
 
     private void setAdapter(String s) {
@@ -317,24 +323,54 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.bt_save)
-    void onClickSave() {
-
+    private void spinnerTrack(){
         mSetTimeSpiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        string = Integer.valueOf(mEditTextStart.getText().toString());
-                        Log.d(LOG_TAG,string + "1");
+                        mButtonSave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modelSpinerTrack.setDayStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                modelSpinerTrack.setDayFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
+
+                            }
+                        });
+                        mEditTextEnd.setText("");
+                        mEditTextStart.setText("");
+                       mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
+
                         break;
                     case 1:
-                        string2 = Integer.valueOf(mEditTextStart.getText().toString());
-                        Log.d(LOG_TAG,string2+ "2");
+                        mButtonSave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modelSpinerTrack.setMorningStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                modelSpinerTrack.setMorningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
+
+                            }
+                        });
+                        mEditTextEnd.setText("");
+                        mEditTextStart.setText("");
+                        mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
                         break;
                     case 2:
-                        string3 = Integer.valueOf(mEditTextStart.getText().toString());
-                        Log.d(LOG_TAG,string3 + "3");
+                        mButtonSave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modelSpinerTrack.setEveningStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                modelSpinerTrack.setEveningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart()+ " end: " + modelSpinerTrack.getEveningFinish());
+
+                            }
+                        });
+                        mEditTextEnd.setText("");
+                        mEditTextStart.setText("");
+                        mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart()+ " end: " + modelSpinerTrack.getEveningFinish());
+
                         break;
                 }
             }
@@ -345,4 +381,9 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
     }
+//    @OnClick(R.id.bt_save)
+//    void onClickSave() {
+//
+//
+//    }
 }

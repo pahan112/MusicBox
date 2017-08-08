@@ -13,4 +13,5 @@
     <style name="Custom.Widget.CardView" parent="CardView">
         <item name="cardCornerRadius">8dp</item>
     </style>
+
 </resources>
