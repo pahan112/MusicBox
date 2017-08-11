@@ -6,10 +6,11 @@
     style="@style/Custom.Widget.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     app:cardElevation="4dp">
 
     <RelativeLayout
+        android:layout_marginEnd="@dimen/margin_layout"
+        android:layout_marginStart="@dimen/margin_layout"
         android:id="@+id/ll_item_music"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,8 +104,8 @@
 
         <ImageView
             android:id="@+id/image_delete_button"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:visibility="invisible"

@@ -264,9 +264,9 @@ public class AdminActivity extends AppCompatActivity {
             musicIdModel.save();
         }
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        intent.putExtra("asdf",string);
-//        intent.putExtra("asdf1",string2);
-//        intent.putExtra("asdf2",string3);
+//        if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
+//            intent.putExtra("asdf",);
+//        }
         startActivity(intent);
     }
 
@@ -332,10 +332,12 @@ public class AdminActivity extends AppCompatActivity {
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
                                 modelSpinerTrack.setDayStart(Integer.valueOf(mEditTextStart.getText().toString()));
                                 modelSpinerTrack.setDayFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
-                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
 
+                                    mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
+                                }
                             }
                         });
                         mEditTextEnd.setText("");
@@ -347,10 +349,12 @@ public class AdminActivity extends AppCompatActivity {
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
                                 modelSpinerTrack.setMorningStart(Integer.valueOf(mEditTextStart.getText().toString()));
                                 modelSpinerTrack.setMorningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
-                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
 
+                                    mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
+                                }
                             }
                         });
                         mEditTextEnd.setText("");
@@ -361,10 +365,12 @@ public class AdminActivity extends AppCompatActivity {
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
                                 modelSpinerTrack.setEveningStart(Integer.valueOf(mEditTextStart.getText().toString()));
                                 modelSpinerTrack.setEveningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
-                                mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart()+ " end: " + modelSpinerTrack.getEveningFinish());
 
+                                    mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart() + " end: " + modelSpinerTrack.getEveningFinish());
+                                }
                             }
                         });
                         mEditTextEnd.setText("");

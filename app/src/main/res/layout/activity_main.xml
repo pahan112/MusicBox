@@ -103,18 +103,16 @@
             android:text="@string/next"
             android:textColor="@color/colorNextPlaying"
             android:textSize="@dimen/text_size" />
-        <TextView
-            android:id="@+id/tv_next_play_main"
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:id="@+id/rv_play_next"
+            android:layout_toRightOf="@+id/tv_next"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/tv_next"
-            tools:text="TextView"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/colorNextPlaying"
-            android:textSize="@dimen/text_size" />
+          />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -132,9 +130,7 @@
         android:id="@+id/rv_item_music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_line"
-        android:layout_marginEnd="@dimen/margin_layout"
-        android:layout_marginStart="@dimen/margin_layout">
+        android:layout_below="@+id/ll_line">
 
     </android.support.v7.widget.RecyclerView>
 

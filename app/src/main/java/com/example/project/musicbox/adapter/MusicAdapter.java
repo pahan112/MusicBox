@@ -43,8 +43,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     private List<MusicInfo> mMusicInfos;
     private OnClickMusicItem mOnClickMusicItem;
-    private int s;
-    private int previosPosition = -1;
     private boolean click = false;
 
     public MusicAdapter(List<MusicInfo> mMusicInfos, OnClickMusicItem mOnClickMusicItem) {
@@ -137,32 +135,35 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             linearLayoutItemMusic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (previosPosition >= 0) {
-
-//                        cardView.addView(itemView,previosPosition);
-
-
-                    }
-//                    if (previosPosition >= 0) {
-//                       notifyDataSetChanged();
-//                        previosPosition= -1;
-//
-//                    }
 
                     mOnClickMusicItem.onClickItem(cardView);
                     if (!click) {
                         /**
                          * здесь идет добавление
                          */
+//                        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
+//                        cardView.bringChildToFront(itemView);
+//                        ((View)itemView.getParent()).requestLayout();
+//                        itemView.startAnimation(mEnlargeAnimation);
+//                        mEnlargeAnimation.setFillAfter(true);
+
+                        linearLayoutItemMusic.bringToFront();
+                        linearLayoutItemMusic.requestLayout();
+                        linearLayoutItemMusic.invalidate();
+
                         mIageViewBtAdd.setVisibility(View.VISIBLE);
                         mIageViewBtDelete.setVisibility(View.VISIBLE);
 
-                        isClick = true;
+                        linearLayoutItemMusic.bringToFront();
+                        linearLayoutItemMusic.requestLayout();
+                        linearLayoutItemMusic.invalidate();
+
+
                     }
 //                    } else {
                     if (click) {
 
-                        cardView.removeAllViews();
+                        itemView.bringToFront();
                         /**
                          * здесь идет удаление
                          */
@@ -245,7 +246,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                         }
 
                     });
-                    previosPosition = getAdapterPosition();
                 }
             });
 

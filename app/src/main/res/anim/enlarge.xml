@@ -2,8 +2,8 @@
     android:duration="300"
     android:fromXScale="100%"
     android:fromYScale="100%"
-    android:toXScale="115%"
-    android:toYScale="115%"
+    android:toXScale="125%"
+    android:toYScale="125%"
     android:pivotX="50%"
     android:pivotY="50%">
 </scale>

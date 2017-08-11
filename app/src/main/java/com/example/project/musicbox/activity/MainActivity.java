@@ -11,11 +11,14 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,13 +35,16 @@ import android.widget.TextView;
 
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.MusicAdapter;
+import com.example.project.musicbox.adapter.PlayNextAdapter;
 import com.example.project.musicbox.fragment.CustomLinearLayoutManager;
 import com.example.project.musicbox.kioskmode.KioskService;
 import com.example.project.musicbox.kioskmode.PrefUtils;
+import com.example.project.musicbox.model.ModelSpinerTrack;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.MusicPlayNow;
+import com.example.project.musicbox.model.MusicTextPlayNext;
 import com.example.project.musicbox.model.PlayListModel;
 import com.example.project.musicbox.model.PlayListModel_Table;
 import com.example.project.musicbox.service.MusicService;
@@ -47,6 +54,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,12 +78,15 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     @BindView(R.id.rv_item_music)
     RecyclerView mRecyclerViewMusic;
+
+    @BindView(R.id.rv_play_next)
+    RecyclerView mRecyclerPlayNext;
+
     @BindView(R.id.sv_music)
     SearchView mSearchViewMusic;
     @BindView(R.id.tv_playing_now)
     TextView mTextViewPlayingNow;
-    @BindView(R.id.tv_next_play_main)
-    TextView mTextViewNextPlayMain;
+
 
     @BindView(R.id.rl_main_screen)
     RelativeLayout mRvTouch;
@@ -86,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private int k = 1;
     private int m = 0;
     private int x = 0;
-    int i = -1;
+    int i = 1;
 
 
     private boolean isCloseItem = false;
@@ -102,6 +113,13 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
 
+    private List<MusicTextPlayNext> mMusicPlayNext = new ArrayList<>();
+    private List<MusicInfo> mMusicInfosAdmin2 = new ArrayList<>();
+
+    private PlayNextAdapter mPlayNextAdapter;
+
+
+
     final int speedScroll = 200;
     final Handler handler = new Handler();
     final Runnable runnable = new Runnable() {
@@ -115,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                  * здесь нужно сделать удаление
                  */
                 mEnlargeAnimation.setFillAfter(true);
+                mItemView.bringToFront();
                 isCloseItem = false;
                 checkRecyclerView();
             }
@@ -127,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     Runnable runnableTop = new Runnable() {
         @Override
         public void run() {
-            Log.e(LOG_TAG, "Scrol4");
             mRecyclerViewMusic.smoothScrollToPosition(0);
             handler.removeCallbacks(runnable);
         }
@@ -136,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     Runnable runnableBottom = new Runnable() {
         @Override
         public void run() {
-            Log.e(LOG_TAG, "Scrol5");
             mRecyclerViewMusic.smoothScrollToPosition(mMusicAdapter.getItemCount());
             handler.removeCallbacks(runnable);
         }
@@ -156,6 +173,12 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         mMusicIdModel.clear();
         mMusicIdModel = new Select().from(MusicIdModel.class).queryList();
 
+
+
+        mPlayNextAdapter = new PlayNextAdapter(mMusicPlayNext);
+        mRecyclerPlayNext.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerPlayNext.setAdapter(mPlayNextAdapter);
+
         mMusicInfos.clear();
         for (int i = 0; i < mMusicIdModel.size(); i++) {
 
@@ -174,6 +197,30 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         final int[] c = {10 / (int) getResources().getDisplayMetrics().density};
 
         final CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this, c[0]);
+
+        ItemTouchHelper ith = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            //and in your imlpementaion of
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                // get the viewHolder's and target's positions in your adapter data, swap them
+                Collections.swap(mMusicInfosAdmin, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                // and notify the adapter that its dataset has changed
+                mMusicAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //TODO
+            }
+
+            //defines the enabled move directions in each state (idle, swiping, dragging).
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+            }
+        });
+        ith.attachToRecyclerView(mRecyclerViewMusic);
 
         mMusicAdapter = new MusicAdapter(mMusicInfosAdmin, this);
         mRecyclerViewMusic.setLayoutManager(layoutManager);
@@ -201,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 //check for scroll up
                 if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
                     handler.postDelayed(runnableBottom, speedScroll);
-                    Log.e(LOG_TAG, "Scrol3");
                 }
             }
         });
@@ -211,12 +257,22 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         initSearch();
 
-
+        Delete.table(MusicTextPlayNext.class);
+        mMusicPlayNext.clear();
         if (!mMusicInfos.isEmpty()) {
             mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
             for (m = d + 1; m < mMusicInfos.size(); m++) {
-                mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+//                mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+
+                MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+                musicTextPlayNext.setTrack(mMusicInfos.get(m).getTrack());
+                musicTextPlayNext.setArtist(mMusicInfos.get(m).getArtist());
+                musicTextPlayNext.save();
+
             }
+
+            mMusicPlayNext.addAll(new Select().from(MusicTextPlayNext.class).queryList());
+            mPlayNextAdapter.notifyDataSetChanged();
 
             startService(new Intent(this, MusicService.class));
             getApplicationContext().bindService(new Intent(this, MusicService.class), mServerConn, Context.BIND_AUTO_CREATE);
@@ -230,27 +286,53 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 d = intent.getIntExtra("finsh", 0);
                 mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
 
-                mTextViewNextPlayMain.setText("");
+//                mTextViewNextPlayMain.setText("");
 
                 if (d >= 0 && mMusicPlayNow.isEmpty()) {
+                    Delete.table(MusicTextPlayNext.class);
                     mTextViewPlayingNow.setText(mMusicInfos.get(d).getArtist() + " - " + mMusicInfos.get(d).getTrack());
                     for (m = d + 1; m < mMusicInfos.size(); m++) {
-                        mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+//                        mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
+
+
+                        MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+                        musicTextPlayNext.setTrack(mMusicInfos.get(m).getTrack());
+                        musicTextPlayNext.setArtist(mMusicInfos.get(m).getArtist());
+                        musicTextPlayNext.save();
+
                     }
+                    mMusicPlayNext.clear();
+                    mMusicPlayNext.addAll(new Select().from(MusicTextPlayNext.class).queryList());
+                    mPlayNextAdapter.notifyDataSetChanged();
                     l = -1;
                 }
                 if (l >= 0 && !mMusicPlayNow.isEmpty()) {
 
                     mTextViewPlayingNow.setText(mMusicPlayNow.get(l).getArtist() + " - " + mMusicPlayNow.get(l).getTrack());
-                    mTextViewNextPlayMain.setText("");
+//                    mTextViewNextPlayMain.setText("");
+                    Delete.table(MusicTextPlayNext.class);
                     for (k = l + 1; k < mMusicPlayNow.size(); k++) {
                         Log.d(LOG_TAG, k + "k");
-                        mTextViewNextPlayMain.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
+//                        mTextViewNextPlayMain.append(mMusicPlayNow.get(k).getArtist() + " - " + mMusicPlayNow.get(k).getTrack() + ", ");
+
+                        MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+                        musicTextPlayNext.setTrack(mMusicPlayNow.get(k).getTrack());
+                        musicTextPlayNext.setArtist(mMusicPlayNow.get(k).getArtist());
+                        musicTextPlayNext.save();
+
                     }
                     for (m = d + 1; m < mMusicInfos.size(); m++) {
-                        mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
-                    }
+//                        mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
 
+                        MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+                        musicTextPlayNext.setTrack(mMusicInfos.get(m).getTrack());
+                        musicTextPlayNext.setArtist(mMusicInfos.get(m).getArtist());
+                        musicTextPlayNext.save();
+
+                    }
+                    mMusicPlayNext.clear();
+                    mMusicPlayNext.addAll(new Select().from(MusicTextPlayNext.class).queryList());
+                    mPlayNextAdapter.notifyDataSetChanged();
                 }
             }
         };
@@ -289,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                         }
                     });
         }
+
     }
 
     private void startKioskService() { // ... and this method
@@ -296,20 +379,34 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     }
 
     private void nextPlay() {
+        Delete.table(MusicTextPlayNext.class);
         mMusicPlayNow = new Select().from(MusicPlayNow.class).queryList();
-        mTextViewNextPlayMain.setText("");
+//        mTextViewNextPlayMain.setText("");
         for (x = l + 1; x < mMusicPlayNow.size(); x++) {
 
-            mTextViewNextPlayMain.append(mMusicPlayNow.get(x).getArtist() + " - " + mMusicPlayNow.get(x).getTrack() + ", ");
+//            mTextViewNextPlayMain.append(mMusicPlayNow.get(x).getArtist() + " - " + mMusicPlayNow.get(x).getTrack() + ", ");
+
+            MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+            musicTextPlayNext.setTrack(mMusicPlayNow.get(x).getTrack());
+            musicTextPlayNext.setArtist(mMusicPlayNow.get(x).getArtist());
+            musicTextPlayNext.save();
         }
         for (m = d + 1; m < mMusicInfos.size(); m++) {
-            mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
-        }
+//            mTextViewNextPlayMain.append(mMusicInfos.get(m).getArtist() + " - " + mMusicInfos.get(m).getTrack() + ", ");
 
+            MusicTextPlayNext musicTextPlayNext = new MusicTextPlayNext();
+            musicTextPlayNext.setTrack(mMusicInfos.get(m).getTrack() );
+            musicTextPlayNext.setArtist(mMusicInfos.get(m).getArtist());
+            musicTextPlayNext.save();
+        }
+        mMusicPlayNext.clear();
+        mMusicPlayNext.addAll(new Select().from(MusicTextPlayNext.class).queryList());
+        mPlayNextAdapter.notifyDataSetChanged();
     }
 
     private void initSearch() {
         mSearchViewMusic.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -317,6 +414,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 if (newText.equals("admin")) {
                     finishAffinity();
                 }
@@ -334,6 +432,9 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 return false;
             }
         });
+        ModelSpinerTrack modelSpinerTrack = new ModelSpinerTrack();
+        Log.e(LOG_TAG,modelSpinerTrack.getDayFinish()+ " day");
+        Log.e(LOG_TAG,modelSpinerTrack.getDayStart()+ " day");
     }
 
     protected ServiceConnection mServerConn = new ServiceConnection() {
@@ -376,6 +477,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         unregisterReceiver(br);
         stopService(new Intent(this, KioskService.class));
         Delete.table(MusicPlayNow.class);
+        Delete.table(MusicTextPlayNext.class);
     }
 
 
@@ -393,49 +495,28 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     @Override
     public void onClickItem(CardView itemView) {
-
+        i++;
         mItemView = itemView;
         isCloseItem = true;
 
-
-        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
         itemView.bringToFront();
+        ((View)itemView.getParent()).invalidate();
+        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.setTranslationZ(i);
+            itemView.invalidate();
+        }
+
+
+
         itemView.startAnimation(mEnlargeAnimation);
+
         mEnlargeAnimation.setFillAfter(true);
         mMusicAdapter.setItem(false);
         /**
          * здесь нужно сделать добавление
          */
         checkRecyclerView();
-//        RelativeLayout layout = (RelativeLayout) itemView.getChildAt(0);
-//        layout.addView(itemView);
-//
-//        mImageView = new ImageView(this);
-//
-//        mImageView.setImageResource(R.drawable.add_track);
-//        mImageView.setVisibility(View.INVISIBLE);
-//
-//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-//        layoutParams.gravity=Gravity.END | Gravity.CENTER_VERTICAL;
-//        layoutParams.bottomMargin = 30;
-//        layoutParams.setMargins(12,334,4,5);
-//        mImageView.setLayoutParams(layoutParams);
-//
-//        itemView.addView(mImageView);
-//        layout.addView(mImageView);
-//        RelativeLayout layout = (RelativeLayout) itemView.getChildAt(0);
-//        mImageView = new ImageView(this);
-//        mImageView.setImageResource(R.drawable.add_track);
-////        mImageView.setVisibility(View.INVISIBLE);
-//
-//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-//        layoutParams.gravity=Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-//        layoutParams.bottomMargin = 70;
-//        layoutParams.setMargins(312,334,123,123);
-//        mImageView.setLayoutParams(layoutParams);
-
-//        layout.addView(mImageView);
-
     }
 
     private void checkRecyclerView() {
@@ -455,13 +536,28 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+//        InputMethodManager imm = (InputMethodManager) getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 //
-//   mMusicAdapter.touchScreen(i);
-//        i++;
+//        if (imm.isAcceptingText()) {
+//            View decor_View = getWindow().getDecorView();
+//
+//        int ui_Options = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+//
+//        decor_View.setSystemUiVisibility(ui_Options);
+//        } else {
+//
+//        }
+
         if (isCloseItem) {
 
             mEnlargeAnimation = AnimationUtils.loadAnimation(mRecyclerViewMusic.getContext(), R.anim.scale_out_tv);
             mItemView.startAnimation(mEnlargeAnimation);
+            mItemView.bringToFront();
             mEnlargeAnimation.setFillAfter(true);
             /**
              * здесь нужно сделать удаление
@@ -472,7 +568,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         }
 
-        new CountDownTimer(5000, 10) {
+        new CountDownTimer(3000, 10) {
             @Override
             public void onTick(long millisUntilFinished) {
                 handler.postDelayed(runnable, mMusicAdapter.getItemCount());

@@ -1,10 +1,12 @@
 package com.example.project.musicbox.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Pahan on 07.08.2017.
  */
 
-public class ModelSpinerTrack {
+public class ModelSpinerTrack implements Serializable{
     private Integer dayStart;
     private Integer dayFinish;
     private Integer morningStart;
