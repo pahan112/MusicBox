@@ -44,10 +44,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     private List<MusicInfo> mMusicInfos;
     private OnClickMusicItem mOnClickMusicItem;
     private boolean click = false;
+    private boolean usclick = false;
+    private int c = 0;
 
     public MusicAdapter(List<MusicInfo> mMusicInfos, OnClickMusicItem mOnClickMusicItem) {
         this.mMusicInfos = mMusicInfos;
         this.mOnClickMusicItem = mOnClickMusicItem;
+        c = 10000 * mMusicInfos.size();
     }
 
     @Override
@@ -57,16 +60,30 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public void onBindViewHolder(MusicAdapter.MusicViewHolder holder, int position) {
-        holder.bind(mMusicInfos.get(position));
+//        if (usclick) {
+//            holder.bind(mMusicInfos.get(position));
+//        }else {
+            holder.bind(mMusicInfos.get(position % mMusicInfos.size()));
+//        }
     }
 
     @Override
     public int getItemCount() {
-        return mMusicInfos.size();
+            return c;
     }
 
     public void setPlayList(List<MusicInfo> mMusicInfos) {
         this.mMusicInfos = mMusicInfos;
+        notifyDataSetChanged();
+        Log.d("myLog", "231231");
+        c = mMusicInfos.size();
+        usclick = true;
+    }
+
+    public void setClikItNow() {
+        usclick = false;
+        c = 10000 * mMusicInfos.size();
+        Log.d("myLog", "dfasfasasf231312311");
         notifyDataSetChanged();
     }
 
@@ -88,6 +105,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         TextView mTextViewTimer;
         @BindView(R.id.textView)
         TextView mTextViewAdd;
+        @BindView(R.id.tv_track_name)
+        TextView mTextViewNameTrack;
+        @BindView(R.id.tv_artist_name)
+        TextView mTextViewName;
+
         @BindView(R.id.cv_item_music)
         CardView cardView;
         @BindView(R.id.ll_item_music)
@@ -174,6 +196,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                     mIageViewBtDelete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
                             itemView.bringToFront();
                             itemView.startAnimation(mEnlargeAnimation);
@@ -189,6 +212,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                     mIageViewBtAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            mOnClickMusicItem.inClickAdd(cardView);
                             mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
                             itemView.bringToFront();
                             itemView.startAnimation(mEnlargeAnimation);
@@ -201,9 +225,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                                     /**
                                      * здесь идет добавление
                                      */
+                                    mTextViewArtist.setVisibility(View.INVISIBLE);
+                                    mTextViewTrack.setVisibility(View.INVISIBLE);
+                                    mTextViewName.setVisibility(View.INVISIBLE);
+                                    mTextViewNameTrack.setVisibility(View.INVISIBLE);
+
                                     mImageViewAddBt.setVisibility(View.VISIBLE);
                                     mTextViewAdd.setVisibility(View.VISIBLE);
-                                    itemView.bringToFront();
                                     linearLayoutItemMusic.setClickable(false);
                                     linearLayoutItemMusic.setEnabled(false);
                                     cardView.setCardBackgroundColor(Color.GRAY);
@@ -214,6 +242,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                                     /**
                                      * здесь идет удаление
                                      */
+                                    mTextViewArtist.setVisibility(View.VISIBLE);
+                                    mTextViewTrack.setVisibility(View.VISIBLE);
+                                    mTextViewName.setVisibility(View.VISIBLE);
+                                    mTextViewNameTrack.setVisibility(View.VISIBLE);
+
                                     mImageViewAddBt.setVisibility(View.INVISIBLE);
                                     mTextViewAdd.setVisibility(View.INVISIBLE);
                                     itemView.bringToFront();
@@ -259,6 +292,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     public interface OnClickMusicItem {
         void obClickMusic(MusicInfo musicInfo);
+
+        void inClickAdd(CardView mCardView);
 
         void onClickItem(CardView cardView);
     }

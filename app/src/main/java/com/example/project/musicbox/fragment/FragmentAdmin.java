@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.adapter.FragmentAdapter;
 import com.example.project.musicbox.model.MusicIdModel;
+import com.example.project.musicbox.model.MusicIdModel_Table;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.PlayListModel;
@@ -57,31 +58,70 @@ public class FragmentAdmin extends Fragment implements FragmentAdapter.OnClickDe
         strtext = getArguments().getString("edttext");
 
 
+        assert strtext != null;
+        if(!strtext.equals("admin")) {
 
-        ItemTouchHelper ith = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            //and in your imlpementaion of
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                // get the viewHolder's and target's positions in your adapter data, swap them
-                Collections.swap(mMusicInfos, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                // and notify the adapter that its dataset has changed
-                mFragmentAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                return true;
-            }
+            ItemTouchHelper ith = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+                //and in your imlpementaion of
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    // get the viewHolder's and target's positions in your adapter data, swap them
+                    Collections.swap(mMusicInfos, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    // and notify the adapter that its dataset has changed
+                    mFragmentAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                //TODO
-            }
+                    Log.d(LOG_TAG, viewHolder.getAdapterPosition() + " viewH");
+                    Log.d(LOG_TAG, target.getAdapterPosition() + " Targ");
 
-            //defines the enabled move directions in each state (idle, swiping, dragging).
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
-            }
-        });
-        ith.attachToRecyclerView(recyclerView);
 
+//                lm.remove(lm.get(viewHolder.getAdapterPosition()));
+//                lm.add(lm.get(target.getAdapterPosition()));
+
+
+                    SQLite.delete().from(PlayListModel.class)
+                            .where(PlayListModel_Table.idd.eq(lm.get(viewHolder.getAdapterPosition()).getIdd())).execute();
+
+                    PlayListModel playListModel = new PlayListModel();
+                    playListModel.setIdd(lm.get(viewHolder.getAdapterPosition()).getIdd());
+                    playListModel.setNameList(lm.get(viewHolder.getAdapterPosition()).getNameList());
+                    playListModel.setIdTrack(lm.get(viewHolder.getAdapterPosition()).getIdTrack());
+                    playListModel.save();
+
+
+//                SQLite.delete().from(PlayListModel.class)
+//                        .where(PlayListModel_Table.idd.eq(lm.get(target.getAdapterPosition()).getIdd())).execute();
+//
+//                PlayListModel playListModel2 = new PlayListModel();
+//                playListModel2.setIdd(lm.get(target.getAdapterPosition()).getIdd());
+//                playListModel2.setNameList(lm.get(target.getAdapterPosition()).getNameList());
+//                playListModel2.setIdTrack(lm.get(target.getAdapterPosition()).getIdTrack());
+//                playListModel2.save();
+
+
+                    //  mFragmentAdapter.setNewList();
+
+//                lm.remove(viewHolder.getAdapterPosition());
+//                PlayListModel playListModel = new PlayListModel();
+////                playListModel.setIdd(lm.get(viewHolder.getAdapterPosition()).getIdd());
+////                playListModel.save();
+////                mFragmentAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+//                playListModel.update();
+                    return true;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                }
+
+                //defines the enabled move directions in each state (idle, swiping, dragging).
+                @Override
+                public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                            ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+                }
+            });
+            ith.attachToRecyclerView(recyclerView);
+        }
         addMusic();
 
         mFragmentAdapter = new FragmentAdapter(mMusicInfos, this, lm);

@@ -25,7 +25,7 @@ android {
         applicationId "com.example.project.musicbox"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 14
+        versionCode 16
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

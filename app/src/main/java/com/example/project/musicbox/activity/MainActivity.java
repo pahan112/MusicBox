@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private CardView mItemView;
     private Animation mEnlargeAnimation;
 
-    private ImageView mImageView;
+
     private List<PlayListModel> lm;
 
     private int currentApiVersion;
@@ -114,9 +116,10 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     private List<MusicPlayNow> mMusicPlayNow = new ArrayList<>();
 
     private List<MusicTextPlayNext> mMusicPlayNext = new ArrayList<>();
-    private List<MusicInfo> mMusicInfosAdmin2 = new ArrayList<>();
+
 
     private PlayNextAdapter mPlayNextAdapter;
+    private List<ModelSpinerTrack> mModelSpinerTracks = new ArrayList<>();
 
 
 
@@ -371,7 +374,13 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                         }
                     });
         }
+        mModelSpinerTracks = new Select().from(ModelSpinerTrack.class).queryList();
+        for (int j = 0; j < mModelSpinerTracks.size(); j++) {
+            Log.e(LOG_TAG,mModelSpinerTracks.get(i).getDayStart()+"da ");
+            Log.e(LOG_TAG,mModelSpinerTracks.get(i).getEveningStart()+"ev ");
+            Log.e(LOG_TAG,mModelSpinerTracks.get(i).getMorningStart()+"mor ");
 
+        }
     }
 
     private void startKioskService() { // ... and this method
@@ -409,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mMusicAdapter.setClikItNow();
                 return false;
             }
 
@@ -420,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                 }
                 if (newText.isEmpty()) {
                     mMusicAdapter.setPlayList(mMusicInfosAdmin);
+                    mMusicAdapter.setClikItNow();
                 } else {
                     mPlayListsSearch.clear();
                     for (MusicInfo musicInfo : mMusicInfosAdmin) {
@@ -429,12 +440,10 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
                         mMusicAdapter.setPlayList(mPlayListsSearch);
                     }
                 }
+
                 return false;
             }
         });
-        ModelSpinerTrack modelSpinerTrack = new ModelSpinerTrack();
-        Log.e(LOG_TAG,modelSpinerTrack.getDayFinish()+ " day");
-        Log.e(LOG_TAG,modelSpinerTrack.getDayStart()+ " day");
     }
 
     protected ServiceConnection mServerConn = new ServiceConnection() {
@@ -450,22 +459,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     };
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        FullScreencall();
-//        View decor_View = getWindow().getDecorView();
-//
-//        int ui_Options = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-//
-//        decor_View.setSystemUiVisibility(ui_Options);
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -494,7 +487,33 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     }
 
     @Override
-    public void onClickItem(CardView itemView) {
+    public void inClickAdd(final CardView mCardView) {
+//        new CountDownTimer(1000, 26000) {
+//
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                /**
+//                 * здесь идет добавление
+//                 */
+//                mCardView.setClickable(false);
+//                mCardView.setEnabled(false);
+//                mCardView.setCardBackgroundColor(Color.GRAY);
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                mCardView.setClickable(true);
+//                mCardView.setEnabled(true);
+//
+//
+//            }
+//
+//        }.start();
+
+    }
+
+    @Override
+    public void onClickItem(final CardView itemView) {
         i++;
         mItemView = itemView;
         isCloseItem = true;
@@ -516,6 +535,9 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
         /**
          * здесь нужно сделать добавление
          */
+
+
+
         checkRecyclerView();
     }
 

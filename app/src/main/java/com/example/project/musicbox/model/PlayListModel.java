@@ -44,4 +44,5 @@ public class PlayListModel extends BaseModel implements Serializable{
     public void setIdd(String idd) {
         this.idd = idd;
     }
+
 }

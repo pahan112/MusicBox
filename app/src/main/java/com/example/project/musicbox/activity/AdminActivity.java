@@ -110,11 +110,8 @@ public class AdminActivity extends AppCompatActivity {
     Button mButtonSave;
 
 
-    int string;
-    int string2;
-    int string3;
+    private List<ModelSpinerTrack> mModelSpinerTracks = new ArrayList<>();
 
-    private ModelSpinerTrack modelSpinerTrack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -230,7 +227,6 @@ public class AdminActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-        modelSpinerTrack = new ModelSpinerTrack();
         spinnerTrack();
     }
 
@@ -323,60 +319,98 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-    private void spinnerTrack(){
+    private void spinnerTrack() {
         mSetTimeSpiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
-                                modelSpinerTrack.setDayStart(Integer.valueOf(mEditTextStart.getText().toString()));
-                                modelSpinerTrack.setDayFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
-
+                                if (mEditTextEnd.getText().length() > 0 && mEditTextStart.getText().length() > 0) {
+                                    ModelSpinerTrack modelSpinerTrack = new ModelSpinerTrack();
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setEveningStart(mModelSpinerTracks.get(i).getEveningStart());
+                                        modelSpinerTrack.setEveningFinish(mModelSpinerTracks.get(i).getEveningFinish());
+                                    }
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setMorningStart(mModelSpinerTracks.get(i).getMorningStart());
+                                        modelSpinerTrack.setMorningFinish(mModelSpinerTracks.get(i).getMorningFinish());
+                                    }
+                                    modelSpinerTrack.setDayStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                    modelSpinerTrack.setDayFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                    modelSpinerTrack.save();
                                     mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
+
                                 }
                             }
                         });
+                        mModelSpinerTracks = new Select().from(ModelSpinerTrack.class).queryList();
                         mEditTextEnd.setText("");
                         mEditTextStart.setText("");
-                       mTextSpinerTrack.setText("start: " + modelSpinerTrack.getDayStart() + " end: " + modelSpinerTrack.getDayFinish());
+                        for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
 
+                            mTextSpinerTrack.setText("start: " + mModelSpinerTracks.get(i).getDayStart() + " end: " + mModelSpinerTracks.get(i).getDayFinish());
+                        }
                         break;
                     case 1:
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
-                                modelSpinerTrack.setMorningStart(Integer.valueOf(mEditTextStart.getText().toString()));
-                                modelSpinerTrack.setMorningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                if (mEditTextEnd.getText().length() > 0 && mEditTextStart.getText().length() > 0) {
+                                    ModelSpinerTrack modelSpinerTrack = new ModelSpinerTrack();
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setDayStart(mModelSpinerTracks.get(i).getDayStart());
+                                        modelSpinerTrack.setDayFinish(mModelSpinerTracks.get(i).getDayFinish());
+                                    }
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setEveningStart(mModelSpinerTracks.get(i).getEveningStart());
+                                        modelSpinerTrack.setEveningFinish(mModelSpinerTracks.get(i).getEveningFinish());
+                                    }
+                                    modelSpinerTrack.setMorningStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                    modelSpinerTrack.setMorningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                    modelSpinerTrack.save();
 
                                     mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
                                 }
                             }
                         });
+                        mModelSpinerTracks = new Select().from(ModelSpinerTrack.class).queryList();
                         mEditTextEnd.setText("");
                         mEditTextStart.setText("");
-                        mTextSpinerTrack.setText("start: " + modelSpinerTrack.getMorningStart() + " end: " + modelSpinerTrack.getMorningFinish());
+                        for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                            mTextSpinerTrack.setText("start: " + mModelSpinerTracks.get(i).getMorningStart() + " end: " + mModelSpinerTracks.get(i).getMorningFinish());
+                        }
                         break;
                     case 2:
                         mButtonSave.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(mEditTextEnd.getText().length()>0&&mEditTextStart.getText().length()>0) {
-                                modelSpinerTrack.setEveningStart(Integer.valueOf(mEditTextStart.getText().toString()));
-                                modelSpinerTrack.setEveningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                if (mEditTextEnd.getText().length() > 0 && mEditTextStart.getText().length() > 0) {
+                                    ModelSpinerTrack modelSpinerTrack = new ModelSpinerTrack();
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setDayStart(mModelSpinerTracks.get(i).getDayStart());
+                                        modelSpinerTrack.setDayFinish(mModelSpinerTracks.get(i).getDayFinish());
+                                    }
+                                    for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                                        modelSpinerTrack.setMorningStart(mModelSpinerTracks.get(i).getMorningStart());
+                                        modelSpinerTrack.setMorningFinish(mModelSpinerTracks.get(i).getMorningFinish());
+                                    }
+                                    modelSpinerTrack.setEveningStart(Integer.valueOf(mEditTextStart.getText().toString()));
+                                    modelSpinerTrack.setEveningFinish(Integer.valueOf(mEditTextEnd.getText().toString()));
+                                    modelSpinerTrack.save();
 
                                     mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart() + " end: " + modelSpinerTrack.getEveningFinish());
                                 }
                             }
                         });
+                        mModelSpinerTracks = new Select().from(ModelSpinerTrack.class).queryList();
                         mEditTextEnd.setText("");
                         mEditTextStart.setText("");
-                        mTextSpinerTrack.setText("start: " + modelSpinerTrack.getEveningStart()+ " end: " + modelSpinerTrack.getEveningFinish());
-
+                        for (int i = 0; i < mModelSpinerTracks.size() ; i++) {
+                            mTextSpinerTrack.setText("start: " + mModelSpinerTracks.get(i).getEveningStart() + " end: " + mModelSpinerTracks.get(i).getEveningFinish());
+                        }
                         break;
                 }
             }

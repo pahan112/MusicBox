@@ -46,6 +46,19 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Fragme
     public int getItemCount() {
         return mMusicInfos.size();
     }
+    public void setNewList(){
+        PlayListModel playListModel = new PlayListModel();
+
+//        for (int i = 0; i <mPlayListModels.size() ; i++) {
+
+//            playListModel.setIdd(mPlayListModels.get(i).getIdd());
+            playListModel.update();
+        playListModel.save();
+        notifyDataSetChanged();
+//        }
+//        notifyDataSetChanged();
+
+    }
 
     public void setPlayList(List<MusicInfo> mMusicInfos , List<PlayListModel> mPlayListModels) {
         this.mMusicInfos = mMusicInfos;
@@ -58,6 +71,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Fragme
         TextView textViewAdmin;
         @BindView(R.id.bt_admin_delete)
         Button buttonAdminDelete;
+
 
         public FragmentAdminViewHolder(View itemView) {
             super(itemView);

@@ -1,17 +1,31 @@
 package com.example.project.musicbox.model;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.io.Serializable;
 
 /**
  * Created by Pahan on 07.08.2017.
  */
-
-public class ModelSpinerTrack implements Serializable{
+@Table(database = PlaylistDataBase.class)
+public class ModelSpinerTrack extends BaseModel implements Serializable{
+    @Column
+    @PrimaryKey(autoincrement = true)
+    public long idd;
+    @Column
     private Integer dayStart;
+    @Column
     private Integer dayFinish;
+    @Column
     private Integer morningStart;
+    @Column
     private Integer morningFinish;
+    @Column
     private Integer eveningStart;
+    @Column
     private Integer eveningFinish;
 
     public Integer getDayStart() {
