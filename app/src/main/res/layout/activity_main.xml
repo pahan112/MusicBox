@@ -2,20 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     android:id="@+id/rl_main_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.example.project.musicbox.activity.MainActivity">
 
 
     <ImageView
+        android:id="@+id/rl_main_screen2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitStart"
-        android:id="@+id/rl_main_screen2"
-        app:srcCompat="@drawable/main"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/main" />
 
     <LinearLayout
         android:id="@+id/cv_now_pl"
@@ -53,17 +53,17 @@
 
                 <TextView
                     android:id="@+id/tv_playing_now"
-                    android:textColor="@color/colorTextPlayingNow"
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    tools:text="TextView"
-                    android:textSize="@dimen/text_title_size"
                     android:layout_alignBaseline="@+id/tv_artist"
                     android:layout_alignBottom="@+id/tv_artist"
-                    android:layout_toEndOf="@+id/tv_artist" />
+                    android:layout_marginStart="15dp"
+                    android:layout_toEndOf="@+id/tv_artist"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorTextPlayingNow"
+                    android:textSize="@dimen/text_title_size"
+                    tools:text="TextView" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -105,13 +105,12 @@
             android:textSize="@dimen/text_size" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_centerVertical="true"
+            android:id="@+id/rv_play_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rv_play_next"
-            android:layout_toRightOf="@+id/tv_next"
+            android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
-          />
+            android:layout_toRightOf="@+id/tv_next" />
 
     </RelativeLayout>
 
@@ -127,14 +126,12 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:padding="5dp"
+
         android:id="@+id/rv_item_music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_line">
-
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ll_line"
+        android:padding="10dp" />
 
 
 </RelativeLayout>

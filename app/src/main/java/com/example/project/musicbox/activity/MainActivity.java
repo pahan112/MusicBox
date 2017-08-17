@@ -513,14 +513,25 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
     }
 
     @Override
-    public void onClickItem(final CardView itemView) {
+    public void onClickItem(final CardView itemView ,int position) {
         i++;
         mItemView = itemView;
         isCloseItem = true;
 
         itemView.bringToFront();
         ((View)itemView.getParent()).invalidate();
-        mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
+
+        Log.e("myLog",position+" ");
+        if(position %10 == 9){
+            Log.d(LOG_TAG,"212");
+            mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.erangle70);
+        }else if (position%10 ==0){
+            Log.d(LOG_TAG,"313");
+            mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.erangle20);
+        }else {
+            mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.enlarge);
+            Log.d(LOG_TAG,"415");
+        }
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             itemView.setTranslationZ(i);
             itemView.invalidate();

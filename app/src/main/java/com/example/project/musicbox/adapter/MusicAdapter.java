@@ -75,7 +75,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     public void setPlayList(List<MusicInfo> mMusicInfos) {
         this.mMusicInfos = mMusicInfos;
         notifyDataSetChanged();
-        Log.d("myLog", "231231");
         c = mMusicInfos.size();
         usclick = true;
     }
@@ -83,7 +82,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     public void setClikItNow() {
         usclick = false;
         c = 10000 * mMusicInfos.size();
-        Log.d("myLog", "dfasfasasf231312311");
         notifyDataSetChanged();
     }
 
@@ -138,27 +136,21 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         }
 
 
+
         public void bind(final MusicInfo musicInfo) {
-//            c = musicAdapter.getS();
-//            Log.e("myLog","12345");
+
 
             mTextViewArtist.setText(musicInfo.getArtist());
             mTextViewTrack.setText(musicInfo.getTrack());
 
 
-//            if (c > 0&& isClick){
-//                mEnlargeAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scale_out_tv);
-//                itemView.startAnimation(mEnlargeAnimation);
-//                mEnlargeAnimation.setFillAfter(true);
-//                mIageViewBtAdd.setVisibility(View.INVISIBLE);
-//                mIageViewBtDelete.setVisibility(View.INVISIBLE);
-//                isClick = false;
-//            }
+
             linearLayoutItemMusic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    mOnClickMusicItem.onClickItem(cardView);
+                    mOnClickMusicItem.onClickItem(cardView , getAdapterPosition());
+
                     if (!click) {
                         /**
                          * здесь идет добавление
@@ -295,6 +287,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
         void inClickAdd(CardView mCardView);
 
-        void onClickItem(CardView cardView);
+        void onClickItem(CardView cardViewv,int position);
     }
 }

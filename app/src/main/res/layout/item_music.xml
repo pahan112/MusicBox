@@ -10,11 +10,11 @@
     app:cardElevation="4dp">
 
     <RelativeLayout
-        android:layout_marginEnd="@dimen/margin_layout"
-        android:layout_marginStart="@dimen/margin_layout"
         android:id="@+id/ll_item_music"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/margin_layout"
+        android:layout_marginStart="@dimen/margin_layout"
         android:layout_weight="1"
         android:orientation="vertical"
         android:padding="@dimen/main_padding">
@@ -142,11 +142,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-
-            android:text="added"
             android:layout_below="@+id/iv_add_bt_ch"
+            android:layout_centerHorizontal="true"
+
+            android:layout_centerVertical="true"
+            android:text="added"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:visibility="invisible" />
