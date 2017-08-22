@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.PowerManager;
 
+import com.example.project.musicbox.preferense.PreferencesManager;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -25,6 +26,7 @@ public class AppContext extends Application {
         FlowManager.init(new FlowConfig.Builder(this).build());
         instance = this;
         registerKioskModeScreenOffReceiver();
+        PreferencesManager.initializeInstance(getApplicationContext());
 //        startKioskService();  // a
     }
 

@@ -7,30 +7,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,16 +42,18 @@ import com.example.project.musicbox.model.MusicPlayNow;
 import com.example.project.musicbox.model.MusicTextPlayNext;
 import com.example.project.musicbox.model.PlayListModel;
 import com.example.project.musicbox.model.PlayListModel_Table;
+import com.example.project.musicbox.preferense.PreferencesManager;
 import com.example.project.musicbox.service.MusicService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -201,29 +197,6 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         final CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this, c[0]);
 
-        ItemTouchHelper ith = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            //and in your imlpementaion of
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                // get the viewHolder's and target's positions in your adapter data, swap them
-                Collections.swap(mMusicInfosAdmin, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                // and notify the adapter that its dataset has changed
-                mMusicAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                //TODO
-            }
-
-            //defines the enabled move directions in each state (idle, swiping, dragging).
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
-            }
-        });
-        ith.attachToRecyclerView(mRecyclerViewMusic);
 
         mMusicAdapter = new MusicAdapter(mMusicInfosAdmin, this);
         mRecyclerViewMusic.setLayoutManager(layoutManager);
@@ -257,6 +230,13 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
 
         handler.postDelayed(runnable, speedScroll);
 
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<MusicInfo>>() {
+        }.getType();
+        mMusicInfos = gson.fromJson(PreferencesManager.getInstance().getPrefsListMusicInfo(), type);
+        if (mMusicInfos == null) {
+            mMusicInfos = new ArrayList<>();
+        }
 
         initSearch();
 
@@ -407,6 +387,13 @@ public class MainActivity extends AppCompatActivity implements MusicAdapter.OnCl
             musicTextPlayNext.setTrack(mMusicInfos.get(m).getTrack() );
             musicTextPlayNext.setArtist(mMusicInfos.get(m).getArtist());
             musicTextPlayNext.save();
+        }
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<MusicInfo>>() {
+        }.getType();
+        mMusicInfos = gson.fromJson(PreferencesManager.getInstance().getPrefsListMusicInfo(), type);
+        if (mMusicInfos == null) {
+            mMusicInfos = new ArrayList<>();
         }
         mMusicPlayNext.clear();
         mMusicPlayNext.addAll(new Select().from(MusicTextPlayNext.class).queryList());

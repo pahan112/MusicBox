@@ -26,6 +26,7 @@
     <item name="darkgreen" type="color">#d0523b</item>
     <item name="darkorange" type="color">#e36156</item>
 
+    <item name="light_gray" type="color">#f9f5f5</item>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>

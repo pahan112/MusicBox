@@ -11,7 +11,6 @@ import android.widget.ListView;
 import com.example.project.musicbox.R;
 import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
-import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.PlayListModel;
 import com.example.project.musicbox.model.PlayListModel_Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
@@ -70,6 +69,11 @@ public class TreckActivity extends AppCompatActivity {
 
     @OnClick(R.id.bt_track_add)
     void clickAdd() {
+
+        /**
+         * здесь идет запись плейлистов в базу
+         */
+
         SparseBooleanArray sbArray = mLvTrack.getCheckedItemPositions();
         for (int i = 0; i < sbArray.size(); i++) {
             int key = sbArray.keyAt(i);

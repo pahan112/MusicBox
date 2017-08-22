@@ -2,7 +2,6 @@ package com.example.project.musicbox.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -15,17 +14,17 @@ import com.example.project.musicbox.model.MusicIdModel;
 import com.example.project.musicbox.model.MusicInfo;
 import com.example.project.musicbox.model.MusicInfo_Table;
 import com.example.project.musicbox.model.MusicPlayNow;
-import com.example.project.musicbox.model.PlayListModel;
-import com.example.project.musicbox.model.PlayListModel_Table;
+import com.example.project.musicbox.preferense.PreferencesManager;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Pahan on 06.07.2017.
@@ -60,6 +59,13 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     .where(MusicInfo_Table.id.is(mMusicIdModel.get(i).getIdMusic())).queryList());
         }
 
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<MusicInfo>>() {
+        }.getType();
+        mMusicInfos = gson.fromJson(PreferencesManager.getInstance().getPrefsListMusicInfo(), type);
+        if (mMusicInfos == null) {
+            mMusicInfos = new ArrayList<>();
+        }
 
     }
 

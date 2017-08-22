@@ -3,34 +3,22 @@ package com.example.project.musicbox.adapter;
 
 import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.Transformation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.project.musicbox.R;
-import com.example.project.musicbox.activity.MainActivity;
 import com.example.project.musicbox.model.MusicInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,11 +48,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public void onBindViewHolder(MusicAdapter.MusicViewHolder holder, int position) {
-//        if (usclick) {
-//            holder.bind(mMusicInfos.get(position));
-//        }else {
             holder.bind(mMusicInfos.get(position % mMusicInfos.size()));
-//        }
     }
 
     @Override
@@ -242,7 +226,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                                     mImageViewAddBt.setVisibility(View.INVISIBLE);
                                     mTextViewAdd.setVisibility(View.INVISIBLE);
                                     itemView.bringToFront();
-                                    new CountDownTimer(27000, 1000) {
+                                    new CountDownTimer(3000, 1000) {
 
                                         @Override
                                         public void onTick(long millisUntilFinished) {
